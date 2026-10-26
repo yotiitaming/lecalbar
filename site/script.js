@@ -95,3 +95,13 @@ logo.getBoundingClientRect();requestAnimationFrame(()=>{logo.style.transition=pr
 const update=()=>{const top=mq.matches&&scrollY<24;header.classList.toggle('at-top',top);if(top&&nav&&nav.classList.contains('is-open'))header.querySelector('.nav-toggle').click();};
 measure();update();addEventListener('scroll',update,{passive:true});
 addEventListener('resize',()=>{measure();update();});addEventListener('load',()=>{measure();update();});mq.addEventListener('change',()=>{measure();update();});})();
+
+// Mobile bottom bar: hidden while the hero's three buttons are visible (they duplicate it).
+document.addEventListener('DOMContentLoaded',()=>{const bar=document.querySelector('.mobile-shortcuts'),actions=document.querySelector('.hero-actions');if(!bar)return;
+const mq=matchMedia('(max-width:768px)');let heroVisible=false;
+const set=hidden=>{bar.classList.toggle('is-hidden',hidden);if(hidden){bar.setAttribute('aria-hidden','true');bar.inert=true;}else{bar.removeAttribute('aria-hidden');bar.inert=false;}};
+const apply=()=>set(!!actions&&mq.matches&&heroVisible);
+if(!actions){apply();return;}
+// The top 72px sit under the fixed header, so buttons hidden behind it count as off screen.
+new IntersectionObserver(entries=>{heroVisible=entries[entries.length-1].isIntersecting;apply();},{rootMargin:'-72px 0px 0px 0px'}).observe(actions);
+mq.addEventListener('change',apply);});
