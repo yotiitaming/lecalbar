@@ -167,3 +167,12 @@ html{scroll-padding-top:84px}
 @media(max-width:800px) and (prefers-reduced-motion:reduce){
 .site-header .brand img{transition:opacity 200ms ease}
 }
+
+/* v36 — very wide screens: full-bleed bands, content held to a 1440px measure, header aligned with it */
+@media(min-width:1600px){
+main,footer{max-width:none}
+.hero{width:100%;left:auto;max-height:960px}
+.section,.section.menus-section,footer,.hero .hero-copy,.site-header{padding-left:max(8%,calc((100% - 1440px)/2));padding-right:max(8%,calc((100% - 1440px)/2))}
+.site-header{padding-left:max(6%,calc((100% - 1440px)/2));padding-right:max(6%,calc((100% - 1440px)/2))}
+}
+.site-header{background:#0e0e0e}
