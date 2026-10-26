@@ -151,3 +151,19 @@ html{scroll-padding-top:84px}
 .site-header #main-nav,.nav-line{transition:opacity 150ms ease}
 .site-header #main-nav{transform:none}
 }
+
+/* v34 — mobile: logo starts large over the video, then travels into the header bar on scroll */
+@media(max-width:800px){
+.site-header{position:fixed;left:0;right:0;transition:background-color 300ms cubic-bezier(.23,1,.32,1),border-color 300ms cubic-bezier(.23,1,.32,1)}
+.site-header.at-top{background-color:transparent;border-bottom-color:transparent}
+.site-header .brand img{transform-origin:0 0;transition:transform 450ms cubic-bezier(.23,1,.32,1)}
+.site-header.at-top .brand img{transform:translate3d(var(--logo-x,0px),var(--logo-y,0px),0) scale(var(--logo-s,1))}
+.site-header .nav-toggle{transition:opacity 250ms cubic-bezier(.23,1,.32,1),visibility 250ms}
+.site-header.at-top .nav-toggle{opacity:0;visibility:hidden;pointer-events:none}
+.hero{height:calc(100svh - 72px - env(safe-area-inset-bottom,0px));min-height:540px}
+.hero-brand{display:flex}
+.hero-brand a{visibility:hidden}
+}
+@media(max-width:800px) and (prefers-reduced-motion:reduce){
+.site-header .brand img{transition:opacity 200ms ease}
+}

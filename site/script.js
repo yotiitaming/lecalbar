@@ -84,3 +84,14 @@ nav.addEventListener('click',e=>{if(e.target.closest('a'))set(false);});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&nav.classList.contains('is-open')){set(false);toggle.focus();}});
 document.addEventListener('click',e=>{if(nav.classList.contains('is-open')&&!e.target.closest('.site-header'))set(false);});
 matchMedia('(min-width:801px)').addEventListener('change',()=>set(false));})();
+
+// Mobile: the header logo sits on the hero's logo spot at the top of the page and glides into the bar once scrolling starts.
+(()=>{const header=document.querySelector('.site-header'),logo=header&&header.querySelector('.brand img'),spot=document.querySelector('.hero-brand img');if(!logo||!spot)return;
+const mq=matchMedia('(max-width:800px)'),nav=document.getElementById('main-nav');
+const measure=()=>{if(!mq.matches)return;const prev=logo.style.transition;logo.style.transition='none';logo.style.transform='none';
+const h=logo.getBoundingClientRect(),s=spot.getBoundingClientRect();logo.style.transform='';
+logo.style.setProperty('--logo-x',(s.left-h.left).toFixed(1)+'px');logo.style.setProperty('--logo-y',(s.top+scrollY-h.top).toFixed(1)+'px');logo.style.setProperty('--logo-s',(s.width/h.width).toFixed(3));
+logo.getBoundingClientRect();requestAnimationFrame(()=>{logo.style.transition=prev;});};
+const update=()=>{const top=mq.matches&&scrollY<24;header.classList.toggle('at-top',top);if(top&&nav&&nav.classList.contains('is-open'))header.querySelector('.nav-toggle').click();};
+measure();update();addEventListener('scroll',update,{passive:true});
+addEventListener('resize',()=>{measure();update();});addEventListener('load',()=>{measure();update();});mq.addEventListener('change',()=>{measure();update();});})();
