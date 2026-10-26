@@ -65,3 +65,13 @@ toggle.addEventListener('click',()=>{const open=preview.classList.toggle('is-col
 document.querySelectorAll('[data-menu]').forEach(b=>b.addEventListener('click',()=>requestAnimationFrame(sync)));
 document.querySelectorAll('#drinks-menu-frame,#food-menu-frame').forEach(f=>f.addEventListener('load',()=>setTimeout(sync,300)));
 window.addEventListener('resize',sync);setTimeout(sync,800);})();
+
+// Teaser drift fallback for browsers without CSS scroll-driven animations (e.g. older iOS Safari).
+(()=>{const box=document.querySelector('.menu-teaser'),track=box&&box.querySelector('.menu-teaser-track');if(!track)return;
+if(CSS.supports('animation-timeline: view()')||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+box.classList.add('is-drifting');let queued=false;
+const frame=()=>{queued=false;if(!box.offsetParent)return;const r=track.getBoundingClientRect(),vh=innerHeight;
+const p=(vh-r.top)/(vh+r.height),t=Math.min(1,Math.max(0,(p-.1)/.65));const start=Math.min(0,box.clientWidth-track.scrollWidth);
+track.style.transform='translate3d('+(start*(1-t)).toFixed(1)+'px,0,0)';};
+const queue=()=>{if(!queued){queued=true;requestAnimationFrame(frame);}};
+addEventListener('scroll',queue,{passive:true});addEventListener('resize',queue);document.querySelectorAll('.menu-toggle,[data-menu]').forEach(b=>b.addEventListener('click',queue));queue();})();
