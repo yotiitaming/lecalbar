@@ -1,0 +1,44 @@
+# Publishes site/ to GitHub Pages as a private-ish preview (noindex, form in demo mode).
+# The live site on Hostinger is not affected.
+name: Preview (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+    paths: ['site/**', '.github/workflows/preview.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build preview
+        run: |
+          mkdir -p _preview
+          cp -r site/. _preview/
+          rm -rf _preview/api
+          for f in _preview/*.html; do
+            sed -i 's#<head><meta charset="\(UTF-8\|utf-8\)">#&<meta name="robots" content="noindex, nofollow">#' "$f"
+          done
+          sed -i "s/location.hostname.endsWith('.chatgpt.site')/(location.hostname.endsWith('.chatgpt.site')||location.hostname.endsWith('.github.io'))/" _preview/booking.js
+          printf 'User-agent: *\nDisallow: /\n' > _preview/robots.txt
+          touch _preview/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _preview
+      - id: deployment
+        uses: actions/deploy-pages@v4
