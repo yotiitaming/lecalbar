@@ -66,15 +66,7 @@ document.querySelectorAll('[data-menu]').forEach(b=>b.addEventListener('click',(
 document.querySelectorAll('#drinks-menu-frame,#food-menu-frame').forEach(f=>f.addEventListener('load',()=>setTimeout(sync,300)));
 window.addEventListener('resize',sync);setTimeout(sync,800);})();
 
-// Teaser drift fallback for browsers without CSS scroll-driven animations (e.g. older iOS Safari).
-(()=>{const box=document.querySelector('.menu-teaser'),track=box&&box.querySelector('.menu-teaser-track');if(!track)return;
-if(CSS.supports('animation-timeline: view()')||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-box.classList.add('is-drifting');let queued=false;
-const frame=()=>{queued=false;if(!box.offsetParent)return;const r=track.getBoundingClientRect(),vh=innerHeight;
-const p=(vh-r.top)/(vh+r.height),t=Math.min(1,Math.max(0,(p-.1)/.65));const start=Math.min(0,box.clientWidth-track.scrollWidth);
-track.style.transform='translate3d('+(start*(1-t)).toFixed(1)+'px,0,0)';};
-const queue=()=>{if(!queued){queued=true;requestAnimationFrame(frame);}};
-addEventListener('scroll',queue,{passive:true});addEventListener('resize',queue);document.querySelectorAll('.menu-toggle,[data-menu]').forEach(b=>b.addEventListener('click',queue));queue();})();
+
 
 // Mobile burger menu.
 (()=>{const toggle=document.querySelector('.nav-toggle'),nav=document.getElementById('main-nav');if(!toggle||!nav)return;
@@ -105,3 +97,24 @@ if(!actions){apply();return;}
 // The top 72px sit under the fixed header, so buttons hidden behind it count as off screen.
 new IntersectionObserver(entries=>{heroVisible=entries[entries.length-1].isIntersecting;apply();},{rootMargin:'-72px 0px 0px 0px'}).observe(actions);
 mq.addEventListener('change',apply);});
+
+// Cocktail row. "pin": the stage sticks and the row slides sideways as the page scrolls.
+// "swipe": a native horizontal scroller (?menu=swipe, or when reduced motion is requested).
+(()=>{const box=document.querySelector('.menu-teaser');if(!box)return;
+const stage=box.querySelector('.menu-teaser-stage'),viewport=box.querySelector('.menu-teaser-viewport'),track=box.querySelector('.menu-teaser-track'),bar=box.querySelector('.menu-teaser-progress span'),prev=box.querySelector('.teaser-prev'),next=box.querySelector('.teaser-next');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mode=new URLSearchParams(location.search).get('menu')==='swipe'||reduce?'swipe':'pin';box.dataset.mode=mode;
+box.querySelector('.menu-teaser-all').addEventListener('click',()=>{const t=document.querySelector('.menu-toggle');if(t)t.click();});
+const progress=p=>{bar.style.transform='scaleX('+p.toFixed(4)+')';};
+if(mode==='swipe'){const update=()=>{const max=viewport.scrollWidth-viewport.clientWidth,p=max>0?viewport.scrollLeft/max:0;progress(p);prev.disabled=viewport.scrollLeft<4;next.disabled=viewport.scrollLeft>max-4;};
+const step=dir=>viewport.scrollBy({left:dir*viewport.clientWidth*.8,behavior:reduce?'auto':'smooth'});
+prev.addEventListener('click',()=>step(-1));next.addEventListener('click',()=>step(1));
+viewport.addEventListener('scroll',update,{passive:true});addEventListener('resize',update);update();return;}
+let dist=0,queued=false;
+const layout=()=>{if(!box.offsetParent)return;dist=Math.max(0,track.scrollWidth-viewport.clientWidth);box.style.height=(stage.offsetHeight+dist*0.75)+'px';frame();};
+const frame=()=>{queued=false;if(!box.offsetParent)return;const range=box.offsetHeight-stage.offsetHeight,top=parseFloat(getComputedStyle(stage).top)||0;
+const p=range>0?Math.min(1,Math.max(0,(top-box.getBoundingClientRect().top)/range)):0;track.style.transform='translate3d('+(-p*dist).toFixed(1)+'px,0,0)';progress(p);};
+const queue=()=>{if(!queued){queued=true;requestAnimationFrame(frame);}};
+addEventListener('scroll',queue,{passive:true});addEventListener('resize',layout);addEventListener('load',layout);
+document.querySelectorAll('.menu-toggle,[data-menu]').forEach(b=>b.addEventListener('click',()=>requestAnimationFrame(layout)));
+track.querySelectorAll('img').forEach(i=>{if(!i.complete)i.addEventListener('load',layout,{once:true});});layout();})();
