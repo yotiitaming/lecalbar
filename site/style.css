@@ -124,3 +124,30 @@ body{--bg:#0e0e0e;--gold:#c6a15b;--ink:#f3eee6}.site-header{position:sticky;top:
 @keyframes teaser-drift{from{transform:translateX(min(0px,calc(100cqw - 100%)))}to{transform:translateX(0)}}
 .menu-teaser.is-drifting{overflow:hidden}
 .menu-teaser.is-drifting .menu-teaser-track{will-change:transform}
+
+/* v33 — sticky mobile header: logo + burger */
+.nav-toggle,.site-header #main-nav .nav-mobile-only{display:none}
+@media(max-width:800px){
+.site-header{display:flex;position:sticky;top:0;z-index:70;height:72px;padding:0 5%;gap:0;align-items:center;justify-content:space-between;background:#0e0e0e;border-bottom:1px solid var(--line)}
+.site-header .brand img{width:84px;height:auto}
+.site-header .header-shortcuts{display:none}
+.hero-brand{display:none}
+.hero{height:calc(100svh - 144px - env(safe-area-inset-bottom,0px));min-height:500px}
+.site-header .nav-toggle{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;margin:0 -10px 0 auto;padding:0;border:0;background:none;color:var(--ink);cursor:pointer}
+.nav-toggle svg{width:30px;height:30px;overflow:visible}
+.nav-line{stroke:currentColor;stroke-width:2;stroke-linecap:square;transform-box:view-box;transform-origin:center;transition:transform 220ms cubic-bezier(.23,1,.32,1),opacity 160ms ease}
+.nav-toggle[aria-expanded=true] .nav-line-1{transform:translateY(6px) rotate(45deg)}
+.nav-toggle[aria-expanded=true] .nav-line-2{opacity:0}
+.nav-toggle[aria-expanded=true] .nav-line-3{transform:translateY(-6px) rotate(-45deg)}
+.site-header #main-nav{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;gap:0;margin:0;padding:8px 5% 20px;border:0;border-bottom:1px solid var(--gold);background:var(--bg);box-shadow:0 18px 30px #0008;opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity 200ms cubic-bezier(.23,1,.32,1),transform 200ms cubic-bezier(.23,1,.32,1),visibility 200ms}
+.site-header #main-nav.is-open{opacity:1;visibility:visible;transform:none}
+.site-header #main-nav a{display:flex;align-items:center;min-height:54px;font-size:20px;border-bottom:1px solid var(--line)}
+.site-header #main-nav a:last-child{border-bottom:0}
+.site-header #main-nav .nav-mobile-only{display:flex}
+html{scroll-padding-top:84px}
+#contact{scroll-margin-top:84px}
+}
+@media(max-width:800px) and (prefers-reduced-motion:reduce){
+.site-header #main-nav,.nav-line{transition:opacity 150ms ease}
+.site-header #main-nav{transform:none}
+}

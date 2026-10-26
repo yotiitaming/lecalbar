@@ -75,3 +75,12 @@ const p=(vh-r.top)/(vh+r.height),t=Math.min(1,Math.max(0,(p-.1)/.65));const star
 track.style.transform='translate3d('+(start*(1-t)).toFixed(1)+'px,0,0)';};
 const queue=()=>{if(!queued){queued=true;requestAnimationFrame(frame);}};
 addEventListener('scroll',queue,{passive:true});addEventListener('resize',queue);document.querySelectorAll('.menu-toggle,[data-menu]').forEach(b=>b.addEventListener('click',queue));queue();})();
+
+// Mobile burger menu.
+(()=>{const toggle=document.querySelector('.nav-toggle'),nav=document.getElementById('main-nav');if(!toggle||!nav)return;
+const set=open=>{nav.classList.toggle('is-open',open);toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Fermer le menu':'Ouvrir le menu');};
+toggle.addEventListener('click',()=>set(!nav.classList.contains('is-open')));
+nav.addEventListener('click',e=>{if(e.target.closest('a'))set(false);});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&nav.classList.contains('is-open')){set(false);toggle.focus();}});
+document.addEventListener('click',e=>{if(nav.classList.contains('is-open')&&!e.target.closest('.site-header'))set(false);});
+matchMedia('(min-width:801px)').addEventListener('change',()=>set(false));})();
