@@ -15,3 +15,11 @@ main{padding:24px 14px 40px}
 .price small{font-size:10px}
 .surprise .cocktail{width:100%}
 }
+@media(max-width:620px){
+.alternatives .cocktail:last-child:nth-child(odd){grid-column:1/-1;justify-self:center;width:calc((100% - 14px)/2)}
+.surprise{margin-top:28px}
+.surprise .cocktail>img{width:min(420px,100%)}
+.surprise .ingredients{font-size:14px}
+.surprise .price strong{font-size:19px}
+.surprise .price strong:before,.surprise .price strong:after{width:30px}
+}
