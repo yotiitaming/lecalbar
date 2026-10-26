@@ -1,0 +1,29 @@
+LE CALBAR — FORMULAIRE HOSTINGER
+
+1. Sauvegarder le site actuel. Tester d’abord dans un dossier dédié accessible en HTTPS.
+2. Envoyer le contenu du dossier site/ dans public_html (ou le dossier de test).
+   Le dossier api/ doit rester à côté de index.html. PHP 8.0 minimum.
+3. Dans le dossier parent de public_html (hors de l’espace public), créer calbar-form-config.php :
+
+<?php
+return ['enabled' => true];
+
+4. L’envoi utilise PHP mail(), avec info@lecalbarcocktail.com comme expéditeur fixe,
+   et Thierry@lecalbarcocktail.com comme destinataire. Vérifier que l’envoi PHP est
+   autorisé par l’hébergement et que le domaine est correctement configuré pour les emails.
+   Aucun mot de passe n’est inclus dans cet export. Si mail() n’est pas disponible
+   ou si les messages sont classés spam, configurer un transport SMTP authentifié
+   avant d’ouvrir le formulaire au public.
+5. Effectuer un test réel (après au moins 3 secondes sur la page), vérifier la réception
+   chez Thierry, le classement antispam et la réponse vers l’adresse du demandeur.
+   Un retour positif de mail() signifie acceptation par le serveur, pas livraison garantie.
+6. Vérifier les refus : lundi/dimanche, atelier hors 4–10 personnes, email invalide,
+   jeton absent, champ piège rempli, plus de 5 demandes par heure et par adresse IP.
+7. La version chatgpt.site simule uniquement la validation. Aucun email n’y est envoyé.
+8. Faire valider par Le Calbar la politique de conservation proposée : 12 mois
+   après le dernier échange pour les demandes sans suite. Adapter si nécessaire.
+   La configuration fournie n’ajoute aucun outil publicitaire ou d’analyse d’audience.
+
+Aucune réservation n’est confirmée automatiquement. Aucune donnée du formulaire
+n’est stockée dans une base : elle est transmise par email. Des données techniques
+minimales de limitation sont conservées temporairement par le serveur.
