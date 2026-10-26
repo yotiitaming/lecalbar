@@ -102,3 +102,23 @@ body{--bg:#0e0e0e;--gold:#c6a15b;--ink:#f3eee6}.site-header{position:sticky;top:
 .booking-intro>p:not(.eyebrow){font-size:16px}
 .agency-contact .button{display:flex;justify-content:center;margin:12px 0 0}
 }
+
+/* v31 — drinks teaser: six signatures drifting with the scroll; the full menu stays behind the toggle */
+.menu-teaser{display:none;container-type:inline-size;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:8px 0 4px}
+.menu-teaser::-webkit-scrollbar{display:none}
+.menu-preview.is-collapsed .menu-teaser{display:block}
+.menu-preview.is-collapsed #menu-drinks .menu-sheet{display:none}
+.menu-teaser-track{display:flex;gap:clamp(20px,3vw,40px);width:max-content;margin:0;padding:0;list-style:none}
+.menu-teaser-track li{width:clamp(210px,24vw,300px);text-align:center;scroll-snap-align:start}
+.menu-teaser-track img{display:block;width:100%;height:auto;aspect-ratio:514/424;object-fit:contain;margin-bottom:14px}
+.menu-teaser-track p{margin:0}
+.teaser-base{font-family:Georgia,serif;font-size:21px;line-height:1.25}
+.teaser-lead{color:var(--muted);font-size:14px;margin-top:6px!important}
+.teaser-price{color:var(--gold);font-size:16px;margin-top:10px!important}
+.teaser-price span{color:var(--muted);font-size:13px;margin-left:6px}
+@supports (animation-timeline:view()){
+@media (prefers-reduced-motion:no-preference){
+.menu-teaser{overflow:clip}
+.menu-teaser-track{animation:teaser-drift linear both;animation-timeline:view();animation-range:cover 10% cover 75%}
+}}
+@keyframes teaser-drift{from{transform:translateX(min(0px,calc(100cqw - 100%)))}to{transform:translateX(0)}}
