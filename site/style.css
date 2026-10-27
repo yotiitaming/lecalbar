@@ -285,3 +285,19 @@ main,footer{max-width:none}
 .bar-gallery-next{right:12px;width:44px;height:44px}
 .bar-discover{margin-top:28px}
 }
+
+/* v43 — Le bar strip: drifts right to left with the scroll; swipeable when motion is reduced or unsupported */
+.bar-gallery{container-type:inline-size;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.bar-gallery::-webkit-scrollbar{display:none}
+.bar-gallery:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+.bar-gallery .bar-gallery-track{width:max-content;overflow:visible;scroll-snap-type:none}
+.bar-gallery.is-drifting{overflow:hidden}
+.bar-gallery.is-drifting .bar-gallery-track{will-change:transform}
+@supports (animation-timeline:view()){
+@media (prefers-reduced-motion:no-preference){
+.bar-gallery{overflow:clip}
+.bar-gallery .bar-gallery-track{animation:bar-drift linear both;animation-timeline:view();animation-range:cover 10% cover 90%}
+}}
+@keyframes bar-drift{from{transform:translateX(0)}to{transform:translateX(min(0px,calc(100cqw - 100%)))}}
+.paris{padding-bottom:100px}
+@media(max-width:800px){.paris{padding-bottom:65px}}

@@ -115,9 +115,15 @@ document.querySelector('.recipe-link')?.addEventListener('click',e=>{const previ
 if(drinks.getAttribute('aria-selected')!=='true')drinks.click();if(preview.classList.contains('is-collapsed'))toggle.click();
 requestAnimationFrame(()=>document.getElementById('menus').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'}));});
 
-// Le bar photo strip: the arrow scrolls to the next photos and hides at the end.
-(()=>{const track=document.querySelector('.bar-gallery-track'),next=document.querySelector('.bar-gallery-next');if(!track||!next)return;
-const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const sync=()=>{next.hidden=track.scrollLeft>=track.scrollWidth-track.clientWidth-4;};
-next.addEventListener('click',()=>track.scrollBy({left:track.clientWidth*.75,behavior:reduce?'auto':'smooth'}));
-track.addEventListener('scroll',sync,{passive:true});addEventListener('resize',sync);track.querySelectorAll('img').forEach(i=>i.addEventListener('load',sync,{once:true}));sync();})();
+
+
+// Le bar photo strip drifts right to left as the section scrolls (the cocktail row goes the other way).
+// CSS scroll-driven animation where supported; this fallback covers the rest. Reduced motion keeps a swipeable strip.
+(()=>{const box=document.querySelector('.bar-gallery'),track=box&&box.querySelector('.bar-gallery-track');if(!track)return;
+if(CSS.supports('animation-timeline: view()')||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+box.classList.add('is-drifting');let queued=false;
+const frame=()=>{queued=false;const r=track.getBoundingClientRect(),vh=innerHeight;
+const p=(vh-r.top)/(vh+r.height),t=Math.min(1,Math.max(0,(p-.1)/.8));const end=Math.min(0,box.clientWidth-track.scrollWidth);
+track.style.transform='translate3d('+(end*t).toFixed(1)+'px,0,0)';};
+const queue=()=>{if(!queued){queued=true;requestAnimationFrame(frame);}};
+addEventListener('scroll',queue,{passive:true});addEventListener('resize',queue);track.querySelectorAll('img').forEach(i=>i.addEventListener('load',queue,{once:true}));queue();})();
