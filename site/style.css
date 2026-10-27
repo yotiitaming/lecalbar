@@ -241,3 +241,22 @@ main,footer{max-width:none}
 .techniques .tech-copy li:last-child{border-bottom:0}
 .tab-name{text-wrap:balance}
 @media(max-width:800px){.tab-name{font-size:16px}}
+
+/* v41 — Le bar: copy beside a full-bleed photo of the facade; address moves to the footer */
+.paris{--pad:8vw;padding-left:var(--pad);padding-right:var(--pad)}
+.paris-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:64px;align-items:center}
+.paris .paris-copy p{max-width:520px}
+.paris-hours{margin-top:28px;color:#c3bfb6}
+.paris-hours a{color:var(--gold);border-bottom:1px solid var(--gold);padding:4px 0}
+.paris-photo{margin:0 calc(-1 * var(--pad)) 0 0}
+.paris-photo img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover}
+.footer-address{font-style:normal;font-size:14px;line-height:1.7;color:var(--muted)}
+.footer-address a{color:var(--ink)}
+@media(hover:hover) and (pointer:fine){.paris-hours a:hover,.footer-address a:hover{color:var(--ink)}}
+@media(min-width:1600px){.paris{--pad:max(8vw,calc((100vw - 1440px)/2))}}
+@media(max-width:800px){
+.paris{--pad:7vw}
+.paris-layout{grid-template-columns:1fr;gap:36px}
+.paris-photo{margin:0 calc(-1 * var(--pad))}
+.footer-address{width:100%}
+}
