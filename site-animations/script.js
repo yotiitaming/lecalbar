@@ -112,9 +112,11 @@ mq.addEventListener('change',apply);});
 document.querySelector('.tech-next')?.addEventListener('click',e=>{const key=e.currentTarget.dataset.next||'fatwash';switchTechnique(key);});
 
 // "Voir la carte" in Savoir-faire opens the full drinks menu, not the 6-cocktail preview.
-document.querySelector('.recipe-link')?.addEventListener('click',e=>{const preview=document.getElementById('menu-preview'),drinks=document.getElementById('menu-tab-drinks'),toggle=document.querySelector('.menu-toggle');if(!preview||!drinks||!toggle)return;e.preventDefault();
+// "Carte" shortcuts (header, bottom bar, burger) open the full drinks menu too.
+// The bottom bar sits after this script in the page, so wait for the document.
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.recipe-link,.header-shortcuts a[href="#menus"],.mobile-shortcuts a[href="#menus"],#main-nav a[href="#menus"]').forEach(link=>link.addEventListener('click',e=>{const preview=document.getElementById('menu-preview'),drinks=document.getElementById('menu-tab-drinks'),toggle=document.querySelector('.menu-toggle');if(!preview||!drinks||!toggle)return;e.preventDefault();
 if(drinks.getAttribute('aria-selected')!=='true')drinks.click();if(preview.classList.contains('is-collapsed'))toggle.click();
-requestAnimationFrame(()=>document.getElementById('menus').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'}));});
+requestAnimationFrame(()=>document.getElementById('menus').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'}));}));});
 
 
 
