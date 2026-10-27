@@ -322,3 +322,6 @@ main,footer{max-width:none}
 /* v45 — the food menu is short: always shown in full, no preview fade */
 .menu-preview.is-collapsed #menu-food .menu-sheet{max-height:none;overflow:visible}
 .menu-preview.is-collapsed #menu-food .menu-sheet::after{content:none}
+
+/* v46 — workshop photo is portrait: keep the pour centred */
+.workshop-art img{object-position:center 40%}
