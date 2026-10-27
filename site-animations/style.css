@@ -329,9 +329,9 @@ main,footer{max-width:none}
 /* v47 — press feedback and a soft crossfade on technique change */
 .button,.action-card,.menu-categories button,.tech-tabs button,.menu-toggle,.tech-next,.booking-call,.mobile-shortcuts a,.header-shortcuts a{transition-property:background-color,color,border-color,transform;transition-duration:200ms,200ms,200ms,160ms;transition-timing-function:ease,ease,ease,ease-out}
 .button:active,.action-card:active,.menu-categories button:active,.tech-tabs button:active,.menu-toggle:active,.tech-next:active,.booking-call:active,.mobile-shortcuts a:active,.header-shortcuts a:active{transform:scale(.97)}
-.tech-media img,.tech-copy{transition:opacity 180ms ease,filter 180ms ease}
-.technique-panel.is-switching .tech-media img,.technique-panel.is-switching .tech-copy{opacity:0;filter:blur(2px)}
-@media(prefers-reduced-motion:reduce){.button:active,.action-card:active,.menu-categories button:active,.tech-tabs button:active,.menu-toggle:active,.tech-next:active,.booking-call:active,.mobile-shortcuts a:active,.header-shortcuts a:active{transform:none}.technique-panel.is-switching .tech-media img,.technique-panel.is-switching .tech-copy{filter:none}}
+.tech-copy{transition:opacity 180ms ease,filter 180ms ease}
+.technique-panel.is-switching .tech-copy{opacity:0;filter:blur(2px)}
+@media(prefers-reduced-motion:reduce){.button:active,.action-card:active,.menu-categories button:active,.tech-tabs button:active,.menu-toggle:active,.tech-next:active,.booking-call:active,.mobile-shortcuts a:active,.header-shortcuts a:active{transform:none}.technique-panel.is-switching .tech-copy{filter:none}}
 
 /* Animation candidates (comparison copy) */
 :root{--ease-out:cubic-bezier(.23,1,.32,1)}
@@ -361,3 +361,6 @@ main,footer{max-width:none}
 @starting-style{#slot-label{transform:none}}
 }
 @keyframes status-fade{from{opacity:0}to{opacity:1}}
+
+/* v48 — outgoing technique photo during the slide */
+.techniques .tech-media .tech-ghost{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
