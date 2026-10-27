@@ -114,3 +114,10 @@ document.querySelector('.tech-next')?.addEventListener('click',e=>{const key=e.c
 document.querySelector('.recipe-link')?.addEventListener('click',e=>{const preview=document.getElementById('menu-preview'),drinks=document.getElementById('menu-tab-drinks'),toggle=document.querySelector('.menu-toggle');if(!preview||!drinks||!toggle)return;e.preventDefault();
 if(drinks.getAttribute('aria-selected')!=='true')drinks.click();if(preview.classList.contains('is-collapsed'))toggle.click();
 requestAnimationFrame(()=>document.getElementById('menus').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'}));});
+
+// Le bar photo strip: the arrow scrolls to the next photos and hides at the end.
+(()=>{const track=document.querySelector('.bar-gallery-track'),next=document.querySelector('.bar-gallery-next');if(!track||!next)return;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const sync=()=>{next.hidden=track.scrollLeft>=track.scrollWidth-track.clientWidth-4;};
+next.addEventListener('click',()=>track.scrollBy({left:track.clientWidth*.75,behavior:reduce?'auto':'smooth'}));
+track.addEventListener('scroll',sync,{passive:true});addEventListener('resize',sync);track.querySelectorAll('img').forEach(i=>i.addEventListener('load',sync,{once:true}));sync();})();
