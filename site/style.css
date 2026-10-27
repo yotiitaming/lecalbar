@@ -187,3 +187,57 @@ main,footer{max-width:none}
 .mobile-shortcuts.is-hidden{transform:none}
 }
 @media(min-width:769px){.mobile-shortcuts.is-hidden{transform:none;opacity:1;visibility:visible;pointer-events:auto}}
+
+/* v39 — Savoir-faire: centred heading, numbered tabs, full-bleed photo beside the technique */
+.techniques{--pad:8vw;padding-left:var(--pad);padding-right:var(--pad);padding-bottom:0}
+.techniques-heading{text-align:center;max-width:900px;margin:0 auto}
+.techniques-heading h2{margin-bottom:22px}
+.techniques-heading>p:last-child{color:#d3cec3;font-family:Georgia,serif;font-size:19px;margin:0}
+.techniques .tech-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:56px 0 0;border-bottom:1px solid #5a4a2c}
+.techniques .tech-tabs button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:18px 12px 22px;border:0;border-left:1px solid #5a4a2c;border-bottom:3px solid transparent;margin-bottom:-1px;background:none;color:#8d887e;cursor:pointer;transition:color 200ms ease,border-color 200ms ease}
+.techniques .tech-tabs button:last-child{border-right:1px solid #5a4a2c}
+.techniques .tech-tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--gold)}
+.tab-num{color:var(--gold);font-family:Georgia,serif;font-size:20px;line-height:1}
+.tab-name{font-family:Georgia,serif;font-size:clamp(24px,2.6vw,38px);line-height:1.15}
+@media(hover:hover) and (pointer:fine){.techniques .tech-tabs button[aria-selected=false]:hover{color:#d3cec3}}
+.techniques .technique-panel{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0;align-items:stretch;margin:0 0 0 calc(-1 * var(--pad))}
+.tech-media{position:relative;min-height:640px;overflow:hidden;background:#050504}
+.techniques .tech-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;aspect-ratio:auto;max-height:none}
+.techniques .tech-copy{padding:56px 0 64px 56px}
+.techniques .tech-copy h3{font-size:clamp(36px,3.4vw,52px);margin:14px 0 22px}
+.techniques .tech-copy>p{color:#d3cec3;font-family:Georgia,serif;font-size:18px;line-height:1.6;max-width:560px}
+.techniques .tech-copy ol{list-style:none;counter-reset:step;padding:0;margin:30px 0 0}
+.techniques .tech-copy li{counter-increment:step;display:grid;grid-template-columns:64px 1fr;align-items:baseline;padding:16px 0;border-bottom:1px solid #5a4a2c;color:#e4dfd5;font-family:Georgia,serif;font-size:17px}
+.techniques .tech-copy li::before{content:counter(step,decimal-leading-zero);color:var(--gold);font-size:22px}
+.techniques .recipe{border-top:1px solid var(--gold);margin-top:34px;padding-top:22px}
+.recipe-card{display:grid;grid-template-columns:150px 1fr;gap:28px;align-items:center;margin-top:12px}
+.recipe-card img{width:100%;height:auto}
+.techniques .recipe h4{font-size:28px;margin:0 0 6px}
+.techniques .recipe-card p{margin:0;color:#d3cec3;font-family:Georgia,serif;font-size:17px;line-height:1.5}
+.techniques .recipe-card i{display:block;margin-top:4px;font-size:14px}
+.techniques .recipe-card i:empty{display:none}
+.recipe-link{display:inline-flex;gap:8px;margin-top:14px;padding:6px 0;color:var(--gold);font-family:Georgia,serif;font-size:17px;border-bottom:1px solid var(--gold)}
+.tech-next{display:flex;justify-content:flex-end;gap:8px;width:100%;margin-top:34px;padding:16px 0 0;border:0;border-top:1px solid #5a4a2c;background:none;color:var(--gold);font-family:Georgia,serif;font-size:17px;cursor:pointer}
+.tech-next #tech-next-name{color:var(--ink)}
+@media(hover:hover) and (pointer:fine){.recipe-link:hover,.tech-next:hover{color:var(--ink)}}
+@media(min-width:1600px){.techniques{--pad:max(8vw,calc((100vw - 1440px)/2))}}
+@media(max-width:1100px) and (min-width:801px){.techniques .tech-copy{padding-left:36px}.tech-media{min-height:560px}}
+@media(max-width:800px){
+.techniques{--pad:7vw}
+.techniques .tech-tabs{margin-top:36px}
+.techniques .tech-tabs button{padding:14px 4px 16px;gap:4px}
+.tab-num{font-size:15px}
+.tab-name{font-size:17px}
+.techniques .technique-panel{grid-template-columns:1fr;margin:0 calc(-1 * var(--pad))}
+.tech-media{min-height:0;aspect-ratio:4/3}
+.techniques .tech-copy{padding:32px var(--pad) 48px}
+.techniques .tech-copy>p{font-size:17px}
+.techniques .tech-copy li{grid-template-columns:48px 1fr;font-size:16px}
+.recipe-card{grid-template-columns:110px 1fr;gap:18px}
+.techniques .recipe h4{font-size:24px}
+.techniques .recipe-card p,.recipe-link,.tech-next{font-size:16px}
+}
+.techniques .tech-copy>p.eyebrow{font-family:inherit;font-size:12px;line-height:1.7;color:var(--gold);letter-spacing:2.5px}
+.techniques .tech-copy li:last-child{border-bottom:0}
+.tab-name{text-wrap:balance}
+@media(max-width:800px){.tab-name{font-size:16px}}
