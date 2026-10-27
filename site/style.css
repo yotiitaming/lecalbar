@@ -318,3 +318,7 @@ main,footer{max-width:none}
 .menus-section .menu-categories button{padding:14px 4px 16px;gap:4px}
 .tab-detail{font-size:13px}
 }
+
+/* v45 — the food menu is short: always shown in full, no preview fade */
+.menu-preview.is-collapsed #menu-food .menu-sheet{max-height:none;overflow:visible}
+.menu-preview.is-collapsed #menu-food .menu-sheet::after{content:none}

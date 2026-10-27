@@ -60,7 +60,7 @@ if(heroActions&&siteHeader){const observer=new IntersectionObserver(entries=>{co
 
 // Menu preview: show the start of the menu, reveal the rest on demand.
 (()=>{const preview=document.getElementById('menu-preview'),toggle=document.querySelector('.menu-toggle');if(!preview||!toggle)return;
-const sync=()=>{const panel=preview.querySelector('.menu-category:not([hidden]) .menu-sheet');if(!panel)return;const collapsed=preview.classList.contains('is-collapsed');const tall=!!panel.closest('.menu-category').querySelector('.menu-teaser')||panel.scrollHeight>parseFloat(getComputedStyle(panel).maxHeight||0)+40;toggle.parentElement.hidden=collapsed&&!tall;};
+const sync=()=>{const panel=preview.querySelector('.menu-category:not([hidden]) .menu-sheet');if(!panel)return;if(panel.closest('#menu-food')){toggle.parentElement.hidden=true;return;}const collapsed=preview.classList.contains('is-collapsed');const tall=!!panel.closest('.menu-category').querySelector('.menu-teaser')||panel.scrollHeight>parseFloat(getComputedStyle(panel).maxHeight||0)+40;toggle.parentElement.hidden=collapsed&&!tall;};
 toggle.addEventListener('click',()=>{const open=preview.classList.toggle('is-collapsed')===false;toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'Réduire la carte':'Voir toute la carte';if(!open)document.getElementById('menus').scrollIntoView({block:'start'});sync();});
 document.querySelectorAll('[data-menu]').forEach(b=>b.addEventListener('click',()=>requestAnimationFrame(sync)));
 document.querySelectorAll('#drinks-menu-frame,#food-menu-frame').forEach(f=>f.addEventListener('load',()=>setTimeout(sync,300)));
