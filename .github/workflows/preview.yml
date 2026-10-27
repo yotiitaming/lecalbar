@@ -5,7 +5,7 @@ name: Preview (GitHub Pages)
 on:
   push:
     branches: [main]
-    paths: ['site/**', '.github/workflows/preview.yml']
+    paths: ['site/**', 'site-animations/**', '.github/workflows/preview.yml']
   workflow_dispatch:
 
 permissions:
@@ -30,10 +30,17 @@ jobs:
           mkdir -p _preview
           cp -r site/. _preview/
           rm -rf _preview/api
-          for f in _preview/*.html; do
+          # Comparison copy with the proposed animations, served at /animations/
+          if [ -d site-animations ]; then
+            mkdir -p _preview/animations
+            cp -r site-animations/. _preview/animations/
+            rm -rf _preview/animations/api
+          fi
+          for f in _preview/*.html _preview/animations/*.html; do
             sed -i 's#<head><meta charset="\(UTF-8\|utf-8\)">#&<meta name="robots" content="noindex, nofollow">#' "$f"
           done
           sed -i "s/location.hostname.endsWith('.chatgpt.site')/(location.hostname.endsWith('.chatgpt.site')||location.hostname.endsWith('.github.io'))/" _preview/booking.js
+          [ -f _preview/animations/booking.js ] && sed -i "s/location.hostname.endsWith('.chatgpt.site')/(location.hostname.endsWith('.chatgpt.site')||location.hostname.endsWith('.github.io'))/" _preview/animations/booking.js
           printf 'User-agent: *\nDisallow: /\n' > _preview/robots.txt
           touch _preview/.nojekyll
       - uses: actions/configure-pages@v5
