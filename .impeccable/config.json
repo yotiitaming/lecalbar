@@ -2,16 +2,6 @@
   "detector": {
     "ignoreRules": [],
     "ignoreFiles": [],
-    "ignoreValues": [
-      {
-        "rule": "cramped-padding",
-        "value": "*",
-        "files": [
-          "prototypes/hero/index.html"
-        ],
-        "createdAt": "2026-10-28T09:19:11.613Z",
-        "reason": "Claude triage: flagged element is the prototype's context copy of the site header; its content is flex-centred in an 80px bar, not flush with the border"
-      }
-    ]
+    "ignoreValues": []
   }
 }

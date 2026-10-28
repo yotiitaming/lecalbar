@@ -338,3 +338,27 @@ main,footer{max-width:none}
 
 /* v49 — the carte heading has no subtitle line */
 .menus-section>.menus-heading h2{margin-bottom:0}
+
+/* v50 — desktop hero "Immersion": full-screen video, centred logo and copy, header hidden until the hero buttons leave the view */
+.hero-logo,.hero-strip{display:none}
+@media(min-width:801px){
+.site-header{position:fixed;top:0;left:0;right:0;transform:translateY(-100%);visibility:hidden;background:#0e0e0e;transition:transform 300ms cubic-bezier(.23,1,.32,1),visibility 300ms}
+.site-header.show-shortcuts{transform:none;visibility:visible}
+.hero{height:100svh;min-height:640px;max-height:none;align-items:stretch}
+.hero .hero-photo:after{background:radial-gradient(ellipse 70% 60% at 50% 46%,rgba(0,0,0,.72),rgba(0,0,0,.35) 70%),linear-gradient(0deg,rgba(0,0,0,.75),transparent 35%)}
+.hero .hero-copy{align-items:center;justify-content:center;text-align:center;padding:48px 8% 120px}
+.hero-logo{display:block;width:150px;height:auto;margin:0 0 28px}
+.hero .hero-copy .desktop-eyebrow{color:#dfc18a;letter-spacing:3px}
+.hero .hero-copy h1{font-size:clamp(46px,6vw,92px);letter-spacing:-.02em;margin:16px 0 18px}
+.hero-signature{margin:0;font-family:Georgia,serif;font-size:19px;letter-spacing:0;color:#e4dfd5}
+.hero-actions{width:100%;max-width:960px;margin:40px auto 0;text-align:left}
+.hero-strip{position:absolute;left:0;right:0;bottom:0;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(198,165,104,.35);background:rgba(10,10,9,.55)}
+.hero-strip>*{display:flex;align-items:center;justify-content:center;gap:10px;min-height:64px;margin:0;padding:12px 16px;font-size:14px;color:#d3cec3}
+.hero-strip>*+*{border-left:1px solid rgba(198,165,104,.25)}
+.hero-strip a{color:var(--ink)}
+.hero-strip a span{color:var(--gold)}
+}
+@media(min-width:801px) and (hover:hover) and (pointer:fine){.hero-strip a:hover{color:var(--gold)}}
+@media(min-width:801px) and (prefers-reduced-motion:reduce){.site-header{transform:none;opacity:0;transition:opacity 200ms ease,visibility 200ms}.site-header.show-shortcuts{opacity:1}}
+/* mobile: centred headline and signature over the video */
+@media(max-width:800px){.hero .hero-copy{align-items:center;text-align:center}.hero .hero-copy h1,.hero-signature{max-width:none;margin-left:auto;margin-right:auto;text-align:center}.hero-actions{align-self:stretch;text-align:left}}
