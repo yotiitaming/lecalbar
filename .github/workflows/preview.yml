@@ -5,7 +5,7 @@ name: Preview (GitHub Pages)
 on:
   push:
     branches: [main]
-    paths: ['site/**', 'site-animations/**', '.github/workflows/preview.yml']
+    paths: ['site/**', 'site-animations/**', 'prototypes/**', '.github/workflows/preview.yml']
   workflow_dispatch:
 
 permissions:
@@ -36,6 +36,8 @@ jobs:
             cp -r site-animations/. _preview/animations/
             rm -rf _preview/animations/api
           fi
+          # Design prototypes (variant pickers), served at /prototypes/<name>/
+          if [ -d prototypes ]; then cp -r prototypes _preview/prototypes; fi
           for f in _preview/*.html _preview/animations/*.html; do
             sed -i 's#<head><meta charset="\(UTF-8\|utf-8\)">#&<meta name="robots" content="noindex, nofollow">#' "$f"
           done
