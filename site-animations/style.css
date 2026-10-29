@@ -402,3 +402,15 @@ h1,h2,.techniques-heading h2,.menus-heading h2,.hero .hero-copy h1,.agency-page 
 
 /* v53 — Bodoni is wider than Georgia: keep hero button titles on one line */
 @media(min-width:801px){.hero .action-title{font-size:clamp(19px,1.6vw,23px);white-space:nowrap}}
+
+/* v54 — mobile hero: logo, kicker, headline and signature grouped and centred above the three buttons;
+   the logo still glides into the header on scroll (it now starts from .hero-logo) */
+@media(max-width:800px){
+.hero-brand{display:none}
+.hero .hero-copy{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 5% 18px}
+.hero-logo{display:block;width:112px;height:auto;margin:auto 0 14px;visibility:hidden}
+.hero .desktop-eyebrow{display:block;margin:0 0 14px;font-size:11px;letter-spacing:2.5px;color:#dfc18a}
+.hero .hero-copy h1{margin:0 0 10px}
+.hero-signature{margin:0 0 28px}
+.hero-actions{margin-top:auto}
+}
