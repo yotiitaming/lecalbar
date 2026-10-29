@@ -5,7 +5,7 @@ name: Preview (GitHub Pages)
 on:
   push:
     branches: [main]
-    paths: ['site/**', 'site-animations/**', 'prototypes/**', '.github/workflows/preview.yml']
+    paths: ['site/**', 'site-animations/**', 'site-redesign/**', 'prototypes/**', '.github/workflows/preview.yml']
   workflow_dispatch:
 
 permissions:
@@ -36,12 +36,20 @@ jobs:
             cp -r site-animations/. _preview/animations/
             rm -rf _preview/animations/api
           fi
+          # Redesign proposal, served at /redesign/: site/ with the files from site-redesign/ laid over it
+          if [ -d site-redesign ]; then
+            mkdir -p _preview/redesign
+            cp -r site/. _preview/redesign/
+            cp -r site-redesign/. _preview/redesign/
+            rm -rf _preview/redesign/api
+          fi
           # Design prototypes (variant pickers), served at /prototypes/<name>/
           if [ -d prototypes ]; then cp -r prototypes _preview/prototypes; fi
-          for f in _preview/*.html _preview/animations/*.html; do
+          for f in _preview/*.html _preview/animations/*.html _preview/redesign/*.html; do
             sed -i 's#<head><meta charset="\(UTF-8\|utf-8\)">#&<meta name="robots" content="noindex, nofollow">#' "$f"
           done
           sed -i "s/location.hostname.endsWith('.chatgpt.site')/(location.hostname.endsWith('.chatgpt.site')||location.hostname.endsWith('.github.io'))/" _preview/booking.js
+          [ -f _preview/redesign/booking.js ] && sed -i "s/location.hostname.endsWith('.chatgpt.site')/(location.hostname.endsWith('.chatgpt.site')||location.hostname.endsWith('.github.io'))/" _preview/redesign/booking.js
           [ -f _preview/animations/booking.js ] && sed -i "s/location.hostname.endsWith('.chatgpt.site')/(location.hostname.endsWith('.chatgpt.site')||location.hostname.endsWith('.github.io'))/" _preview/animations/booking.js
           printf 'User-agent: *\nDisallow: /\n' > _preview/robots.txt
           touch _preview/.nojekyll
