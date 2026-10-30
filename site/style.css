@@ -410,3 +410,52 @@ h1,h2,.techniques-heading h2,.menus-heading h2,.hero .hero-copy h1,.agency-page 
 .mobile-shortcuts a.shortcut-reserve[aria-current]{color:#0e0e0e;box-shadow:inset 0 3px 0 #0e0e0e}
 #main-nav a[aria-current]{color:var(--gold)}
 @media(min-width:801px){.site-header #main-nav a[aria-current]{box-shadow:inset 0 -1px 0 var(--gold)}}
+
+/* v56 — no button sits in gold at rest: hero buttons, header shortcuts and the mobile bar are all transparent.
+   Gold fills only while the visitor interacts (hover, press, keyboard focus, and briefly after a tap). */
+.hero .action-card,.hero .action-card--primary{background:rgba(0,0,0,.5);border-color:var(--gold);color:var(--ink)}
+.hero .action-card--primary .action-detail{color:#d3cec3}
+.hero .action-card--primary .action-arrow{color:var(--gold)}
+.header-shortcuts a.shortcut-reserve,.mobile-shortcuts a.shortcut-reserve{background:transparent;color:var(--ink)}
+.hero .action-card,.header-shortcuts a,.mobile-shortcuts a{transition:background-color 180ms ease,color 180ms ease,border-color 180ms ease,transform 160ms ease-out}
+.hero .action-card:active,.hero .action-card.is-pressed,.hero .action-card:focus-visible,
+.header-shortcuts a:active,.header-shortcuts a.is-pressed,.header-shortcuts a:focus-visible,
+.mobile-shortcuts a:active,.mobile-shortcuts a.is-pressed,.mobile-shortcuts a:focus-visible{background:var(--gold);border-color:var(--gold);color:#0e0e0e}
+.hero .action-card:is(:active,.is-pressed,:focus-visible) :is(.action-detail,.action-arrow){color:#0e0e0e}
+@media(hover:hover) and (pointer:fine){
+.hero .action-card:hover,.hero .action-card--primary:hover,.header-shortcuts a:hover,.header-shortcuts a.shortcut-reserve:hover{background:var(--gold);border-color:var(--gold);color:#0e0e0e}
+.hero .action-card:hover :is(.action-detail,.action-arrow){color:#0e0e0e}
+}
+/* Section in view: a quiet ink line, never gold */
+.header-shortcuts a[aria-current],.header-shortcuts a.shortcut-reserve[aria-current]{color:var(--ink);box-shadow:inset 0 -2px 0 rgba(242,238,229,.85)}
+.mobile-shortcuts a[aria-current],.mobile-shortcuts a.shortcut-reserve[aria-current]{color:var(--ink);box-shadow:inset 0 2px 0 rgba(242,238,229,.85)}
+.header-shortcuts a.is-pressed[aria-current],.mobile-shortcuts a.is-pressed[aria-current]{color:#0e0e0e}
+#main-nav a[aria-current]{color:var(--ink)}
+@media(min-width:801px){.site-header #main-nav a[aria-current]{box-shadow:inset 0 -1px 0 rgba(242,238,229,.85)}}
+.mobile-shortcuts{background:#0e0e0e}
+
+/* v56 — no button sits in gold at rest: hero cards, header shortcuts and the mobile bar are all outlined;
+   gold fills only while the visitor interacts (hover with a mouse, press, keyboard focus) */
+.hero .action-card--primary{background:rgba(0,0,0,.5);border-color:var(--gold);color:var(--ink)}
+.hero .action-card--primary .action-detail{color:var(--ink)}
+.hero .action-card--primary .action-arrow{color:var(--gold)}
+.hero .action-card{transition:background-color 200ms ease,border-color 200ms ease,color 200ms ease,transform 160ms ease-out}
+.hero .action-card .action-detail,.hero .action-card .action-arrow{transition:color 200ms ease}
+.hero .action-card:active,.hero .action-card:focus-visible{background:var(--gold);border-color:var(--gold);color:#0e0e0e}
+.hero .action-card:active .action-detail,.hero .action-card:active .action-arrow,.hero .action-card:focus-visible .action-detail,.hero .action-card:focus-visible .action-arrow{color:#0e0e0e}
+@media(hover:hover) and (pointer:fine){
+.hero .action-card:hover{background:var(--gold);border-color:var(--gold);color:#0e0e0e}
+.hero .action-card:hover .action-detail,.hero .action-card:hover .action-arrow{color:#0e0e0e}
+.header-shortcuts a:hover,.mobile-shortcuts a:hover{background:var(--gold);color:#0e0e0e}
+}
+.header-shortcuts a.shortcut-reserve,.mobile-shortcuts a.shortcut-reserve{background:transparent;color:var(--ink)}
+.header-shortcuts a,.mobile-shortcuts a{transition:background-color 200ms ease,color 200ms ease,box-shadow 200ms ease,transform 160ms ease-out}
+.header-shortcuts a:active,.mobile-shortcuts a:active,.header-shortcuts a:focus-visible,.mobile-shortcuts a:focus-visible{background:var(--gold);color:#0e0e0e}
+/* current section: a quiet ink line, not gold */
+.header-shortcuts a[aria-current],.header-shortcuts a.shortcut-reserve[aria-current]{color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink)}
+.mobile-shortcuts a[aria-current],.mobile-shortcuts a.shortcut-reserve[aria-current]{color:var(--ink);box-shadow:inset 0 2px 0 var(--ink)}
+#main-nav a[aria-current]{color:var(--ink)}
+@media(min-width:801px){.site-header #main-nav a[aria-current]{box-shadow:inset 0 -1px 0 var(--ink)}}
+@media(max-width:800px){#main-nav a[aria-current]{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}}
+@media(min-width:1101px){.hero .action-detail{white-space:nowrap;font-size:13px}}
+@media(min-width:801px){.hero .action-card{align-items:center}.hero .action-label{align-self:center}}

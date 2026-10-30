@@ -155,3 +155,9 @@ const seen=new Map();const io=new IntersectionObserver(entries=>{entries.forEach
   const current=ids.find(id=>seen.get(id));mark(current||'');},{rootMargin:'-40% 0px -59% 0px'});
 ids.forEach(id=>io.observe(document.getElementById(id)));
 addEventListener('scrollend',()=>{locked=0;});});
+
+// Gold feedback on tap: keep the pressed look a moment after the finger lifts, so it is seen on touch screens.
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.hero .action-card,.header-shortcuts a,.mobile-shortcuts a').forEach(el=>{let t;
+el.addEventListener('pointerdown',()=>{clearTimeout(t);el.classList.add('is-pressed');});
+const off=()=>{clearTimeout(t);t=setTimeout(()=>el.classList.remove('is-pressed'),350);};
+el.addEventListener('pointerup',off);el.addEventListener('pointercancel',off);el.addEventListener('pointerleave',off);});});
