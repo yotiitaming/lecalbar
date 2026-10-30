@@ -488,3 +488,12 @@ h1,h2,.techniques-heading h2,.menus-heading h2,.hero .hero-copy h1,.agency-page 
 @media(max-width:800px){#main-nav a[aria-current]{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}}
 @media(min-width:1101px){.hero .action-detail{white-space:nowrap;font-size:13px}}
 @media(min-width:801px){.hero .action-card{align-items:center}.hero .action-label{align-self:center}}
+
+/* v57 — mobile hero per mockup: logo and kicker at the top, headline and signature just above the buttons */
+@media(max-width:800px){
+.hero .hero-copy{padding-top:max(20px,env(safe-area-inset-top,0px))}
+.hero-logo{width:128px;margin:0 0 14px}
+.hero .hero-copy h1{margin-top:auto;font-size:clamp(32px,10.2vw,46px)}
+.hero-signature{margin:0 0 22px}
+.hero-actions{margin-top:0}
+}
