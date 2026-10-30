@@ -49,6 +49,11 @@ menuFromHash();
 
 const heroVideo=document.getElementById('hero-video');
 if(heroVideo){
+ // Phones get their own portrait cut and poster; desktop keeps the landscape video. The <source media> picks the file;
+ // this also covers browsers that ignore media on <source> and keeps the poster in step.
+ {const phone=matchMedia('(max-width: 800px)').matches,want=phone?'hero-background-mobile.mp4':'hero-background.mp4';
+  heroVideo.poster=phone?'assets/hero-video-poster-mobile.jpg?v=1':'assets/hero-video-poster.jpg?v=2';
+  if(heroVideo.currentSrc&&!heroVideo.currentSrc.includes(want)){const src=[...heroVideo.querySelectorAll('source')].find(s=>s.getAttribute('src').includes(want));if(src){heroVideo.src=src.getAttribute('src');heroVideo.load();}}}
  heroVideo.defaultMuted=true;heroVideo.muted=true;heroVideo.autoplay=true;heroVideo.loop=true;heroVideo.playsInline=true;heroVideo.controls=false;
  heroVideo.setAttribute('muted','');heroVideo.setAttribute('playsinline','');heroVideo.setAttribute('webkit-playsinline','');
  const tryPlay=()=>{if(document.hidden||!heroVideo.paused)return;heroVideo.muted=true;const attempt=heroVideo.play();if(attempt)attempt.catch(()=>{});};
