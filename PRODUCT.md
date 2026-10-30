@@ -17,7 +17,7 @@ Primary: people who want to come for a drink at Le Calbar, a cocktail bar in Par
 Secondary audiences served by the same site (confirmed present in the content, lower priority):
 - Groups booking a cocktail workshop or EVJF (4 to 10 people).
 - Private clients and companies wanting an event or private hire ("L'Évent by Le Calbar").
-- Bar and hospitality professionals looking for consulting and training ("Agency by Le Calbar").
+- Agency by Le Calbar (consulting and training for bar professionals) is no longer presented on the site: the owner removed it in October 2026.
 
 ## Product Purpose
 
@@ -38,7 +38,7 @@ Two things no other cocktail bar can truthfully claim together:
 
 ## Capabilities and Constraints
 
-- Pages: `index.html` (home, all sections), `cocktails.html` and `food.html` (menus, embedded in the home page via iframes), `mentions-legales.html`, `confidentialite.html`.
+- Pages: `index.html` (home, all sections), `cocktails.html` and `food.html` (menus, embedded in the home page via iframes), `mentions-legales.html`, `confidentialite.html`. The separate Agency page was removed.
 - Request form with three types (table, atelier, événement), CSRF token, honeypot, 3-second delay, rate limit of 5 requests per hour per IP, server-side date rules (no Monday/Sunday, workshop group size 4–10).
 - No analytics or advertising tools; no database. This must stay true unless the owner decides otherwise.
 - The site covers Paris only. The former home page let visitors choose between Le Calbar Paris and Le Calbar Genève; that choice is gone, so links to `lecalbarcocktail.com/paris.html` are obsolete and must be removed.

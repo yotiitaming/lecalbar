@@ -414,3 +414,28 @@ h1,h2,.techniques-heading h2,.menus-heading h2,.hero .hero-copy h1,.agency-page 
 .hero-signature{margin:0 0 28px}
 .hero-actions{margin-top:auto}
 }
+
+/* v55 — Le bar strip: native scroller with arrows and progress; drifts with the page until the visitor takes over */
+.bar-gallery-wrap{position:relative;margin:56px calc(-1 * var(--pad) + 12px) 0}
+.bar-gallery-wrap .bar-gallery{margin:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-padding-left:0;scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.bar-gallery-wrap .bar-gallery.is-auto{scroll-snap-type:none}
+.bar-gallery-wrap .bar-gallery .bar-gallery-track{animation:none;transform:none;will-change:auto}
+.bar-gallery-wrap .bar-gallery-track li{scroll-snap-align:start}
+.bar-gallery-arrow{position:absolute;top:calc(50% - 14px);transform:translateY(-50%);display:none;align-items:center;justify-content:center;width:48px;height:48px;border:1px solid var(--gold);border-radius:50%;background:rgba(14,14,14,.78);color:var(--ink);cursor:pointer;transition:background-color 200ms ease,color 200ms ease,opacity 200ms ease}
+.bar-gallery-prev{left:24px}
+.bar-gallery-next{right:24px}
+.bar-gallery-arrow svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6}
+.bar-gallery-arrow:disabled{opacity:0;pointer-events:none}
+.bar-gallery-arrow:active{transform:translateY(-50%) scale(.95)}
+@media(hover:hover) and (pointer:fine){.bar-gallery-arrow{display:flex}.bar-gallery-arrow:hover{background:var(--gold);color:var(--bg)}}
+.bar-gallery-progress{height:2px;margin:16px 12px 0 0;background:var(--line)}
+.bar-gallery-progress span{display:block;height:100%;background:var(--gold);transform-origin:left;transform:scaleX(0)}
+@media(max-width:800px){.bar-gallery-wrap{margin:16px 0 0}.bar-gallery-progress{margin:12px 0 0}}
+
+/* v55 — menu highlight for the section in view or just tapped */
+.header-shortcuts a[aria-current]{color:var(--gold);box-shadow:inset 0 -3px 0 var(--gold)}
+.header-shortcuts a.shortcut-reserve[aria-current]{color:#0e0e0e;box-shadow:inset 0 -3px 0 #0e0e0e}
+.mobile-shortcuts a[aria-current]{color:var(--gold);box-shadow:inset 0 3px 0 var(--gold)}
+.mobile-shortcuts a.shortcut-reserve[aria-current]{color:#0e0e0e;box-shadow:inset 0 3px 0 #0e0e0e}
+#main-nav a[aria-current]{color:var(--gold)}
+@media(min-width:801px){.site-header #main-nav a[aria-current]{box-shadow:inset 0 -1px 0 var(--gold)}}

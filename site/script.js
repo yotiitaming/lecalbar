@@ -123,13 +123,35 @@ requestAnimationFrame(()=>document.getElementById('menus').scrollIntoView({behav
 
 
 
-// Le bar photo strip drifts right to left as the section scrolls (the cocktail row goes the other way).
-// CSS scroll-driven animation where supported; this fallback covers the rest. Reduced motion keeps a swipeable strip.
-(()=>{const box=document.querySelector('.bar-gallery'),track=box&&box.querySelector('.bar-gallery-track');if(!track)return;
-if(CSS.supports('animation-timeline: view()')||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-box.classList.add('is-drifting');let queued=false;
-const frame=()=>{queued=false;const r=track.getBoundingClientRect(),vh=innerHeight;
-const p=(vh-r.top)/(vh+r.height),t=Math.min(1,Math.max(0,(p-.1)/.8));const end=Math.min(0,box.clientWidth-track.scrollWidth);
-track.style.transform='translate3d('+(end*t).toFixed(1)+'px,0,0)';};
-const queue=()=>{if(!queued){queued=true;requestAnimationFrame(frame);}};
-addEventListener('scroll',queue,{passive:true});addEventListener('resize',queue);track.querySelectorAll('img').forEach(i=>i.addEventListener('load',queue,{once:true}));queue();})();
+
+
+// Le bar photo strip: a native horizontal scroller (swipe on touch, arrows on desktop).
+// While the visitor hasn't touched it, it drifts with the page scroll as a preview; the first swipe, wheel or click hands control back.
+(()=>{const wrap=document.querySelector('.bar-gallery-wrap'),box=wrap&&wrap.querySelector('.bar-gallery');if(!box)return;
+const prev=wrap.querySelector('.bar-gallery-prev'),next=wrap.querySelector('.bar-gallery-next'),bar=wrap.querySelector('.bar-gallery-progress span');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let auto=!reduce,lastSet=-1,queued=false;
+const max=()=>Math.max(0,box.scrollWidth-box.clientWidth);
+const sync=()=>{const m=max(),x=box.scrollLeft;bar.style.transform='scaleX('+(m?Math.min(1,x/m):0).toFixed(4)+')';prev.disabled=x<=4;next.disabled=x>=m-4;};
+const release=()=>{if(!auto)return;auto=false;box.classList.remove('is-auto');};
+const drift=()=>{queued=false;if(!auto)return;const r=box.getBoundingClientRect(),vh=innerHeight,p=(vh-r.top)/(vh+r.height),t=Math.min(1,Math.max(0,(p-.1)/.8));
+  const x=Math.round(t*max());if(x!==lastSet){lastSet=x;box.scrollLeft=x;}};
+const queue=()=>{if(auto&&!queued){queued=true;requestAnimationFrame(drift);}};
+if(auto)box.classList.add('is-auto');
+box.addEventListener('scroll',()=>{if(auto&&Math.abs(box.scrollLeft-lastSet)>2)release();sync();},{passive:true});
+['pointerdown','wheel','keydown'].forEach(ev=>box.addEventListener(ev,e=>{if(ev!=='wheel'||Math.abs(e.deltaX)>Math.abs(e.deltaY))release();},{passive:true}));
+box.addEventListener('touchstart',()=>{box.addEventListener('touchmove',function tm(){release();box.removeEventListener('touchmove',tm);},{passive:true});},{passive:true});
+const step=dir=>{release();box.scrollBy({left:dir*box.clientWidth*.7,behavior:reduce?'auto':'smooth'});};
+prev.addEventListener('click',()=>step(-1));next.addEventListener('click',()=>step(1));
+box.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();step(1);}else if(e.key==='ArrowLeft'){e.preventDefault();step(-1);}});
+addEventListener('scroll',queue,{passive:true});addEventListener('resize',()=>{queue();sync();});
+box.querySelectorAll('img').forEach(i=>i.addEventListener('load',()=>{queue();sync();},{once:true}));queue();sync();})();
+
+// Menu highlight: the shortcut or nav link for the section in view (or just tapped) is marked as current.
+document.addEventListener('DOMContentLoaded',()=>{const ids=['paris','menus','savoir-faire','contact','ateliers','evenements'].filter(id=>document.getElementById(id));
+const links=[...document.querySelectorAll('.header-shortcuts a,.mobile-shortcuts a,#main-nav a')].filter(a=>ids.includes((a.getAttribute('href')||'').slice(1)));
+let locked=0;const mark=id=>links.forEach(a=>{if(a.getAttribute('href')==='#'+id)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});
+links.forEach(a=>a.addEventListener('click',()=>{const id=a.getAttribute('href').slice(1);mark(id);locked=Date.now()+1200;}));
+const seen=new Map();const io=new IntersectionObserver(entries=>{entries.forEach(e=>seen.set(e.target.id,e.isIntersecting));if(Date.now()<locked)return;
+  const current=ids.find(id=>seen.get(id));mark(current||'');},{rootMargin:'-40% 0px -59% 0px'});
+ids.forEach(id=>io.observe(document.getElementById(id)));
+addEventListener('scrollend',()=>{locked=0;});});
