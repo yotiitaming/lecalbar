@@ -522,3 +522,19 @@ h1,h2,.techniques-heading h2,.menus-heading h2,.hero .hero-copy h1,.agency-page 
 .techniques .tech-media{position:relative;top:auto;aspect-ratio:7/5;min-height:0}
 .techniques .tech-copy{padding:40px var(--pad) 56px}
 }
+/* v61 — Savoir-faire desktop: breathing room between the tabs and the panel, and inside the copy column */
+@media(min-width:1440px){
+.techniques .technique-panel{margin-top:48px}
+.techniques .tech-copy{padding-top:36px;padding-bottom:28px}
+}
+@media(min-width:1440px) and (max-width:1535px){
+.techniques .technique-panel{grid-template-columns:minmax(0,1.75fr) minmax(0,1fr)}
+.techniques .tech-copy{padding-top:28px;padding-bottom:22px}
+.techniques .tech-copy h3{font-size:34px;margin:4px 0 10px}
+.techniques .tech-copy>p:not(.eyebrow){font-size:15px;line-height:1.5}
+.techniques .tech-copy ol{margin-top:10px}
+.techniques .tech-copy li{padding:5px 0;font-size:14px}
+.recipe-card{grid-template-columns:80px 1fr;gap:16px}
+.techniques .recipe h4{font-size:22px}
+.techniques .recipe-card p{font-size:14px}
+}
