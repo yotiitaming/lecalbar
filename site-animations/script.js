@@ -69,8 +69,9 @@ if(heroActions&&siteHeader){const observer=new IntersectionObserver(entries=>{co
 
 // Menu preview: show the start of the menu, reveal the rest on demand.
 (()=>{const preview=document.getElementById('menu-preview'),toggle=document.querySelector('.menu-toggle');if(!preview||!toggle)return;
-const sync=()=>{const panel=preview.querySelector('.menu-category:not([hidden]) .menu-sheet');if(!panel)return;if(panel.closest('#menu-food')){toggle.parentElement.hidden=true;return;}const collapsed=preview.classList.contains('is-collapsed');const tall=!!panel.closest('.menu-category').querySelector('.menu-teaser')||panel.scrollHeight>parseFloat(getComputedStyle(panel).maxHeight||0)+40;toggle.parentElement.hidden=collapsed&&!tall;};
-toggle.addEventListener('click',()=>{const open=preview.classList.toggle('is-collapsed')===false;toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'Réduire la carte':'Voir toute la carte';if(!open)document.getElementById('menus').scrollIntoView({block:'start'});sync();});
+const sync=()=>{const panel=preview.querySelector('.menu-category:not([hidden]) .menu-sheet');if(!panel)return;if(!preview.classList.contains('is-collapsed')){toggle.parentElement.hidden=true;return;}if(panel.closest('#menu-food')){toggle.parentElement.hidden=true;return;}const collapsed=preview.classList.contains('is-collapsed');const tall=!!panel.closest('.menu-category').querySelector('.menu-teaser')||panel.scrollHeight>parseFloat(getComputedStyle(panel).maxHeight||0)+40;toggle.parentElement.hidden=collapsed&&!tall;};
+// Once the full menu is open it stays open: no "Réduire" button.
+toggle.addEventListener('click',()=>{preview.classList.remove('is-collapsed');toggle.setAttribute('aria-expanded','true');toggle.parentElement.hidden=true;});
 document.querySelectorAll('[data-menu]').forEach(b=>b.addEventListener('click',()=>requestAnimationFrame(sync)));
 document.querySelectorAll('#drinks-menu-frame,#food-menu-frame').forEach(f=>f.addEventListener('load',()=>setTimeout(sync,300)));
 window.addEventListener('resize',sync);setTimeout(sync,800);})();
