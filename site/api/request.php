@@ -28,7 +28,7 @@ if ($guests===false || $guests<($type==='atelier'?4:1) || $guests>($type==='atel
 $tz=new DateTimeZone('Europe/Paris');$d=DateTimeImmutable::createFromFormat('!Y-m-d',$date,$tz);
 if (!$d || $d->format('Y-m-d')!==$date || $d<new DateTimeImmutable('today',$tz) || in_array((int)$d->format('N'),[1,7],true)) respond(422,['message'=>'Choisissez une date à venir, du mardi au samedi.']);
 if ($type==='atelier' && !in_array($slot,['15-16','16-17','17-18'],true)) respond(422,['message'=>'Choisissez un créneau valide.']);
-$times=['18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00','22:30','23:00','23:30','00:00','00:30'];
+$times=['18:00','18:30','19:00','19:30','20:00']; // last bookable arrival: 20h
 if ($type==='table' && !in_array($time,$times,true)) respond(422,['message'=>'Choisissez une heure d’arrivée.']);
 if ($type==='evenement' && $time!=='' && !in_array($time,$times,true)) respond(422,['message'=>'Choisissez une heure valide.']);
 if ($type==='atelier') $time='';
