@@ -567,3 +567,6 @@ h1,h2,.techniques-heading h2,.menus-heading h2,.hero .hero-copy h1,.agency-page 
 .techniques .recipe h4{font-size:22px}
 .techniques .recipe-card p{font-size:14px}
 }
+
+/* v62 — embedded menus: dark sheet behind the iframes, never a light strip */
+.menu-sheet,.drinks-menu-frame{background:var(--bg)}
