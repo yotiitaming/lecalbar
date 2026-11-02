@@ -19,7 +19,7 @@ function field(string $key, int $max, bool $required=false): string {
  $v=$_POST[$key] ?? ''; if (!is_string($v) || strlen($v)>$max || ($required && trim($v)==='')) respond(422,['message'=>'Veuillez vérifier les champs du formulaire.']);
  return trim($v);
 }
-$name=field('name',100,true); $email=field('email',200,true); $phone=field('phone',30); $message=field('message',3000); $type=field('request_type',20,true); $date=field('date',10,true); $slot=field('slot',10);
+$name=field('name',100,true); $email=field('email',200,true); $phone=field('phone',30); $message=field('message',3000); $type=field('request_type',20,true); $date=field('date',10,true); $slot=field('slot',10); $time=field('time',5);
 if (preg_match('/[\r\n\x00]/',$name.$email.$phone) || !filter_var($email,FILTER_VALIDATE_EMAIL)) respond(422,['message'=>'Vérifiez votre nom et votre email.']);
 $types=['table'=>'Réservation au bar','atelier'=>'Atelier cocktails / EVJF','evenement'=>'Événement / privatisation'];
 if (!isset($types[$type])) respond(422,['message'=>'Type de demande invalide.']);
@@ -28,6 +28,10 @@ if ($guests===false || $guests<($type==='atelier'?4:1) || $guests>($type==='atel
 $tz=new DateTimeZone('Europe/Paris');$d=DateTimeImmutable::createFromFormat('!Y-m-d',$date,$tz);
 if (!$d || $d->format('Y-m-d')!==$date || $d<new DateTimeImmutable('today',$tz) || in_array((int)$d->format('N'),[1,7],true)) respond(422,['message'=>'Choisissez une date à venir, du mardi au samedi.']);
 if ($type==='atelier' && !in_array($slot,['15-16','16-17','17-18'],true)) respond(422,['message'=>'Choisissez un créneau valide.']);
+$times=['18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00','22:30','23:00','23:30','00:00','00:30'];
+if ($type==='table' && !in_array($time,$times,true)) respond(422,['message'=>'Choisissez une heure d’arrivée.']);
+if ($type==='evenement' && $time!=='' && !in_array($time,$times,true)) respond(422,['message'=>'Choisissez une heure valide.']);
+if ($type==='atelier') $time='';
 // Fixed-window rate limit, shared across sessions; only a hashed address is retained.
 $dir=sys_get_temp_dir().'/calbar-form-limits';
 if (!is_dir($dir) && !@mkdir($dir,0700,true) && !is_dir($dir)) respond(503,['message'=>'Service momentanément indisponible.']);
@@ -43,7 +47,7 @@ $config=is_file($configPath)?require $configPath:[];
 if (!is_array($config) || ($config['enabled']??false)!==true) respond(503,['message'=>'Le formulaire est en cours d’activation. Appelez-nous au 01 84 06 18 90.']);
 $to='Thierry@lecalbarcocktail.com';$from='info@lecalbarcocktail.com';
 $subject='=?UTF-8?B?'.base64_encode('Le Calbar — '.$types[$type]).'?=';
-$body="Nouvelle demande depuis le site Le Calbar\n\nType : {$types[$type]}\nNom : $name\nEmail : $email\nTéléphone : $phone\nPersonnes : $guests\nDate souhaitée : $date\nCréneau atelier : ".($type==='atelier'?$slot:'Non applicable')."\n\nMessage :\n$message\n\nCette demande ne constitue pas une réservation confirmée.\n";
+$body="Nouvelle demande depuis le site Le Calbar\n\nType : {$types[$type]}\nNom : $name\nEmail : $email\nTéléphone : $phone\nPersonnes : $guests\nDate souhaitée : $date\nHeure : ".($time!==''?str_replace(':','h',$time):'Non précisée')."\nCréneau atelier : ".($type==='atelier'?$slot:'Non applicable')."\n\nMessage :\n$message\n\nCette demande ne constitue pas une réservation confirmée.\n";
 $domain=substr(strrchr($from,'@'),1);
 $headers=['Date: '.date(DATE_RFC2822),'Message-ID: <'.bin2hex(random_bytes(12)).'@'.$domain.'>','From: Le Calbar <'.$from.'>','Reply-To: '.$email,'MIME-Version: 1.0','Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: 8bit'];
 // Preferred: authenticated SMTP with the info@ mailbox (DKIM-signed by the mail host, so it does not land in spam).
