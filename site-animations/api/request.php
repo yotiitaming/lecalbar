@@ -44,7 +44,39 @@ if (!is_array($config) || ($config['enabled']??false)!==true) respond(503,['mess
 $to='Thierry@lecalbarcocktail.com';$from='info@lecalbarcocktail.com';
 $subject='=?UTF-8?B?'.base64_encode('Le Calbar — '.$types[$type]).'?=';
 $body="Nouvelle demande depuis le site Le Calbar\n\nType : {$types[$type]}\nNom : $name\nEmail : $email\nTéléphone : $phone\nPersonnes : $guests\nDate souhaitée : $date\nCréneau atelier : ".($type==='atelier'?$slot:'Non applicable')."\n\nMessage :\n$message\n\nCette demande ne constitue pas une réservation confirmée.\n";
-$headers=['From: Le Calbar <'.$from.'>','Reply-To: '.$email,'MIME-Version: 1.0','Content-Type: text/plain; charset=UTF-8'];
-if (!mail($to,$subject,$body,implode("\r\n",$headers))) respond(503,['message'=>'L’envoi a échoué. Appelez-nous au 01 84 06 18 90.']);
+$domain=substr(strrchr($from,'@'),1);
+$headers=['Date: '.date(DATE_RFC2822),'Message-ID: <'.bin2hex(random_bytes(12)).'@'.$domain.'>','From: Le Calbar <'.$from.'>','Reply-To: '.$email,'MIME-Version: 1.0','Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: 8bit'];
+// Preferred: authenticated SMTP with the info@ mailbox (DKIM-signed by the mail host, so it does not land in spam).
+// Credentials live only in calbar-form-config.php, outside public_html.
+$smtp=$config['smtp']??null;
+if (is_array($smtp) && !empty($smtp['host']) && !empty($smtp['user']) && isset($smtp['pass'])) {
+ $sent=smtp_send($smtp,$from,$to,array_merge(['To: '.$to,'Subject: '.$subject],$headers),$body);
+} else {
+ // Fallback: PHP mail() with the envelope sender set to the From address so SPF aligns.
+ $sent=mail($to,$subject,$body,implode("\r\n",$headers),'-f'.$from);
+}
+if (!$sent) respond(503,['message'=>'L’envoi a échoué. Appelez-nous au 01 84 06 18 90.']);
 $_SESSION['csrf']=bin2hex(random_bytes(32));$_SESSION['issued']=time();
 respond(200,['ok'=>true]);
+
+function smtp_send(array $c,string $from,string $to,array $headers,string $body): bool {
+ $host=(string)$c['host'];$port=(int)($c['port']??465);$secure=($c['secure']??($port===465?'ssl':'tls'));
+ $fp=@stream_socket_client(($secure==='ssl'?'ssl://':'tcp://').$host.':'.$port,$errno,$errstr,15,STREAM_CLIENT_CONNECT,stream_context_create(['ssl'=>['verify_peer'=>true,'verify_peer_name'=>true]]));
+ if (!$fp) return false;
+ stream_set_timeout($fp,15);
+ $read=function() use ($fp){$data='';while(($line=fgets($fp,515))!==false){$data.=$line;if(strlen($line)<4||$line[3]===' ')break;}return $data;};
+ $cmd=function(string $c,array $ok) use ($fp,$read){if($c!=='')fwrite($fp,$c."\r\n");$r=$read();return in_array((int)substr($r,0,3),$ok,true);};
+ $ehlo=$_SERVER['SERVER_NAME']??'localhost';
+ if (!$cmd('',[220]) || !$cmd('EHLO '.$ehlo,[250])) {fclose($fp);return false;}
+ if ($secure==='tls') {
+  if (!$cmd('STARTTLS',[220]) || !stream_socket_enable_crypto($fp,true,STREAM_CRYPTO_METHOD_TLS_CLIENT) || !$cmd('EHLO '.$ehlo,[250])) {fclose($fp);return false;}
+ }
+ $ok=$cmd('AUTH LOGIN',[334]) && $cmd(base64_encode((string)$c['user']),[334]) && $cmd(base64_encode((string)$c['pass']),[235])
+  && $cmd('MAIL FROM:<'.$from.'>',[250]) && $cmd('RCPT TO:<'.$to.'>',[250,251]) && $cmd('DATA',[354]);
+ if ($ok) {
+  $msg=implode("\r\n",$headers)."\r\n\r\n".str_replace("\n","\r\n",str_replace("\r\n","\n",$body));
+  $msg=preg_replace('/^\./m','..',$msg);
+  $ok=$cmd($msg."\r\n.",[250]);
+ }
+ $cmd('QUIT',[221]);fclose($fp);return $ok;
+}
