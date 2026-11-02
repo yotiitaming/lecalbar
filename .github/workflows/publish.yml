@@ -1,12 +1,9 @@
-# Publishes the contents of site/ to the root of the `production` branch on every push to main
-# (the branch is replaced each time, like gh-pages). Hostinger auto-deploys `production` into public_html.
+# Publishes the contents of site/ to the root of the `production` branch (replaced each time, like gh-pages).
+# Hostinger auto-deploys `production` into public_html. Manual only: run it once a change is approved on staging.
 # The form config (calbar-form-config.php) lives above public_html on the server and is never part of this branch.
 name: Publish to Hostinger
 
 on:
-  push:
-    branches: [main]
-    paths: ['site/**', '.github/workflows/publish.yml']
   workflow_dispatch:
 
 permissions:
