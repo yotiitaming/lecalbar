@@ -1,0 +1,39 @@
+# Publishes the contents of site/ to the root of the `production` branch on every push to main
+# (the branch is replaced each time, like gh-pages). Hostinger auto-deploys `production` into public_html.
+# The form config (calbar-form-config.php) lives above public_html on the server and is never part of this branch.
+name: Publish to Hostinger
+
+on:
+  push:
+    branches: [main]
+    paths: ['site/**', '.github/workflows/publish.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push site/ to the production branch
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          test -f site/index.html && test -f site/api/request.php
+          rm -rf "$RUNNER_TEMP/prod" && cp -r site "$RUNNER_TEMP/prod"
+          find "$RUNNER_TEMP/prod" -name .DS_Store -delete
+          rm -f "$RUNNER_TEMP/prod/calbar-form-config.php"
+          cd "$RUNNER_TEMP/prod"
+          git init -q -b production
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Publish ${GITHUB_SHA::7} from main"
+          git push --force "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" production
