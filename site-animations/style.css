@@ -621,3 +621,24 @@ h1,h2,.techniques-heading h2,.menus-heading h2,.hero .hero-copy h1,.agency-page 
 .site-header #main-nav{background:linear-gradient(180deg,#2a2f33,#202427);border-bottom:1px solid #d9a35f}
 .site-header #main-nav a{border-bottom-color:rgba(0,0,0,.35);box-shadow:0 1px 0 rgba(255,255,255,.05)}
 }
+
+/* v66 — matte metal: flat slate (the awning's grey), one hairline of warm light, amber icons without glow */
+:root{--metal:#2b3034;--warm:#e9b264}
+.mobile-shortcuts,.site-header,.site-header:not(.at-top){background:var(--metal);box-shadow:none}
+.mobile-shortcuts{border-top:1px solid var(--warm)}
+.site-header,.site-header:not(.at-top){border-bottom:1px solid var(--warm)}
+.mobile-shortcuts::before,.site-header::after{content:none}
+.mobile-shortcuts a+a,.site-header .header-shortcuts a,.site-header .header-shortcuts a.shortcut-reserve{border-left:1px solid rgba(255,255,255,.08);box-shadow:none}
+.mobile-shortcuts svg,.site-header .header-shortcuts svg{color:var(--warm);filter:none}
+.site-header .nav-toggle{color:var(--warm)}
+.mobile-shortcuts a[aria-current],.mobile-shortcuts a.shortcut-reserve[aria-current],.mobile-shortcuts a+a[aria-current]{background:transparent;box-shadow:inset 0 2px 0 var(--warm)}
+.site-header .header-shortcuts a[aria-current],.site-header .header-shortcuts a.shortcut-reserve[aria-current]{background:transparent;box-shadow:inset 0 -2px 0 var(--warm)}
+.site-header #main-nav a[aria-current]{color:var(--warm)}
+@media(min-width:801px){.site-header #main-nav a[aria-current]{box-shadow:inset 0 -1px 0 var(--warm)}}
+.mobile-shortcuts a:active,.mobile-shortcuts a.is-pressed,.mobile-shortcuts a:focus-visible,.site-header .header-shortcuts a:active,.site-header .header-shortcuts a.is-pressed,.site-header .header-shortcuts a:focus-visible{background:var(--warm);color:#1a1d20}
+@media(hover:hover) and (pointer:fine){.site-header .header-shortcuts a:hover{background:var(--warm)}.site-header #main-nav a:hover{color:var(--warm)}}
+@media(max-width:800px){
+.site-header.at-top{background:transparent;border-bottom-color:transparent}
+.site-header #main-nav{background:var(--metal);border-bottom:1px solid var(--warm)}
+.site-header #main-nav a{border-bottom-color:rgba(255,255,255,.08);box-shadow:none}
+}
