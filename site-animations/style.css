@@ -600,3 +600,24 @@ h1,h2,.techniques-heading h2,.menus-heading h2,.hero .hero-copy h1,.agency-page 
 .mobile-shortcuts a:active,.mobile-shortcuts a.is-pressed,.mobile-shortcuts a:focus-visible{background:#f0b86a;color:#1a1d20}
 .mobile-shortcuts a:active svg,.mobile-shortcuts a.is-pressed svg,.mobile-shortcuts a:focus-visible svg{color:#1a1d20;filter:none}
 }
+
+/* v65 — top bar in the same brushed metal grey and warm light as the mobile bottom bar */
+.site-header,.site-header:not(.at-top){background:linear-gradient(180deg,#202427 0%,#2a2f33 45%,#3b4146 100%);border-bottom:1px solid #d9a35f;box-shadow:0 1px 0 rgba(255,214,150,.22),0 12px 28px rgba(0,0,0,.45)}
+.site-header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,226,180,.55),transparent);pointer-events:none}
+.site-header #main-nav a{color:#f3ece0}
+.site-header .header-shortcuts a,.site-header .header-shortcuts a.shortcut-reserve{color:#f3ece0;background:transparent;border-left:1px solid rgba(0,0,0,.35);box-shadow:inset 1px 0 0 rgba(255,255,255,.06)}
+.site-header .header-shortcuts svg{color:#f0b86a;filter:drop-shadow(0 0 6px rgba(240,184,106,.45))}
+.site-header .header-shortcuts a[aria-current],.site-header .header-shortcuts a.shortcut-reserve[aria-current]{color:#fff3df;background:radial-gradient(ellipse 70% 80% at 50% 100%,rgba(240,184,106,.28),transparent 70%);box-shadow:inset 0 -2px 0 #f0b86a,inset 1px 0 0 rgba(255,255,255,.06)}
+.site-header #main-nav a[aria-current]{color:#f0b86a}
+@media(min-width:801px){.site-header #main-nav a[aria-current]{box-shadow:inset 0 -1px 0 #f0b86a}}
+.site-header .header-shortcuts a:active,.site-header .header-shortcuts a.is-pressed,.site-header .header-shortcuts a:focus-visible{background:#f0b86a;color:#1a1d20}
+.site-header .header-shortcuts a:active svg,.site-header .header-shortcuts a.is-pressed svg,.site-header .header-shortcuts a:focus-visible svg{color:#1a1d20;filter:none}
+@media(hover:hover) and (pointer:fine){.site-header .header-shortcuts a:hover{background:#f0b86a;color:#1a1d20}.site-header .header-shortcuts a:hover svg{color:#1a1d20;filter:none}.site-header #main-nav a:hover{color:#f0b86a}}
+@media(max-width:800px){
+.site-header.at-top{background:transparent;border-bottom-color:transparent;box-shadow:none}
+.site-header.at-top::after{opacity:0}
+.site-header::after{transition:opacity 300ms ease}
+.site-header .nav-toggle{color:#f0b86a}
+.site-header #main-nav{background:linear-gradient(180deg,#2a2f33,#202427);border-bottom:1px solid #d9a35f}
+.site-header #main-nav a{border-bottom-color:rgba(0,0,0,.35);box-shadow:0 1px 0 rgba(255,255,255,.05)}
+}
