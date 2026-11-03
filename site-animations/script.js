@@ -167,3 +167,31 @@ document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.he
 el.addEventListener('pointerdown',()=>{clearTimeout(t);el.classList.add('is-pressed');});
 const off=()=>{clearTimeout(t);t=setTimeout(()=>el.classList.remove('is-pressed'),350);};
 el.addEventListener('pointerup',off);el.addEventListener('pointercancel',off);el.addEventListener('pointerleave',off);});});
+
+// Savoir-faire on phones: the three techniques become swipeable cards (scroll-snap), kept in sync with the tabs.
+// Desktop keeps the single panel with tabs and the sliding photo.
+(()=>{const panel=document.getElementById('technique-panel'),tabsBox=document.querySelector('.tech-tabs');if(!panel||!tabsBox||typeof techniques==='undefined')return;
+const keys=Object.keys(techniques),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,phone=matchMedia('(max-width:800px)');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const wrap=document.createElement('div');wrap.className='tech-carousel-wrap';
+wrap.innerHTML='<div class="tech-carousel" role="region" aria-label="Les trois techniques, faire glisser pour changer" tabindex="0">'+keys.map((k,i)=>{const t=techniques[k],next=techniques[keys[(i+1)%keys.length]];
+ return '<article class="tech-card" data-key="'+k+'" aria-label="'+esc(t.title)+'"><div class="tech-media"><img src="'+esc(t.image)+'" alt="'+esc(t.alt)+'" width="1400" height="1000" loading="lazy" decoding="async"></div>'
+ +'<div class="tech-copy"><p class="eyebrow">'+esc(t.category)+'</p><h3>'+esc(t.title)+'</h3><p>'+esc(t.description)+'</p><ol>'+t.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol>'
+ +'<div class="recipe"><p class="eyebrow">COCKTAIL ASSOCIÉ</p><div class="recipe-card"><img src="'+esc(t.illustration)+'" alt="" width="420" height="420" loading="lazy" decoding="async"><div><h4>'+esc(t.recipe)+'</h4><p>'+esc(t.ingredients)+'</p>'+(t.note?'<i>'+esc(t.note)+'</i>':'')+'<a class="recipe-link tech-card-menu" href="#menus">Voir la carte <span aria-hidden="true">→</span></a></div></div></div>'
+ +'<button class="tech-next tech-card-next" type="button" data-next="'+(i+1)%keys.length+'">Technique suivante : <span>'+esc(next.title)+'</span> <span aria-hidden="true">→</span></button></div></article>';}).join('')
+ +'</div><div class="bar-gallery-progress tech-carousel-progress" aria-hidden="true"><span></span></div>';
+panel.after(wrap);
+const track=wrap.querySelector('.tech-carousel'),cards=[...track.children],bar=wrap.querySelector('.tech-carousel-progress span');
+const go=(i,smooth=true)=>{const c=cards[i];if(!c)return;track.scrollTo({left:c.offsetLeft-track.offsetLeft-parseFloat(getComputedStyle(track).paddingLeft||0),behavior:smooth&&!reduce?'smooth':'auto'});};
+let current=0,queued=false;
+const sync=()=>{queued=false;const max=track.scrollWidth-track.clientWidth;bar.style.transform='scaleX('+(max>0?Math.min(1,track.scrollLeft/max):0).toFixed(4)+')';
+ const mid=track.scrollLeft+track.clientWidth*.35;let i=0;cards.forEach((c,j)=>{if(c.offsetLeft-track.offsetLeft<=mid)i=j;});
+ if(i!==current){current=i;if(phone.matches)selectTechnique(keys[i]);}};
+track.addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(sync);}},{passive:true});
+// Tabs on phones scroll the cards instead of swapping the hidden panel.
+document.querySelectorAll('[data-tech]').forEach(b=>b.addEventListener('click',e=>{if(!phone.matches)return;const i=keys.indexOf(b.dataset.tech);if(i<0)return;e.stopImmediatePropagation();selectTechnique(keys[i]);current=i;go(i);},true));
+track.addEventListener('click',e=>{const n=e.target.closest('.tech-card-next');if(n){go(+n.dataset.next);return;}
+ const m=e.target.closest('.tech-card-menu');if(m){e.preventDefault();const real=panel.querySelector('.recipe-link');if(real)real.click();}});
+track.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();go(Math.min(cards.length-1,current+1));}else if(e.key==='ArrowLeft'){e.preventDefault();go(Math.max(0,current-1));}});
+phone.addEventListener('change',()=>{if(phone.matches)go(current,false);});
+sync();})();
