@@ -613,3 +613,10 @@ h1,h2,.techniques-heading h2,.menus-heading h2,.hero .hero-copy h1,.agency-page 
 .site-header #main-nav{background:var(--metal);border-bottom:1px solid var(--warm)}
 .site-header #main-nav a{border-bottom-color:rgba(255,255,255,.08);box-shadow:none}
 }
+
+/* v67 — date and time (or workshop slot) side by side, on desktop and mobile */
+.form-grid .form-when{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:end}
+.form-grid .form-when label{min-width:0}
+.form-grid .form-when input,.form-grid .form-when select{min-width:0;width:100%}
+.form-grid label[hidden]{display:none}
+.form-grid .form-when input,.form-grid .form-when select{height:52px;min-height:52px;box-sizing:border-box;padding-top:0;padding-bottom:0}
