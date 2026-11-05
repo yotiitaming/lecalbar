@@ -644,3 +644,10 @@ h1,h2,.techniques-heading h2,.menus-heading h2,.hero .hero-copy h1,.agency-page 
 .techniques .tech-card .tech-copy{padding:24px 0 8px;display:block}
 .tech-carousel-progress{margin:18px var(--pad) 0}
 }
+
+/* v70 — "(facultatif)" sits on the label line, so paired fields (Email / Téléphone) start at the same height */
+.form-grid label,.form-grid .form-when>label{flex-direction:row;flex-wrap:wrap;align-items:baseline;align-content:flex-end;column-gap:6px;row-gap:8px}
+.form-grid label>input,.form-grid label>select,.form-grid label>textarea{flex:0 0 100%}
+.form-grid label>span{font-size:13px}
+.form-grid label,.form-grid .form-when>label{justify-content:flex-start}
+.form-grid input:not([type=hidden]),.form-grid select{height:52px;min-height:52px;box-sizing:border-box}
