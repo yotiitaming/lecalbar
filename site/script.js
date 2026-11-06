@@ -195,3 +195,28 @@ track.addEventListener('click',e=>{const n=e.target.closest('.tech-card-next');i
 track.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();go(Math.min(cards.length-1,current+1));}else if(e.key==='ArrowLeft'){e.preventDefault();go(Math.max(0,current-1));}});
 phone.addEventListener('change',()=>{if(phone.matches)go(current,false);});
 sync();})();
+
+// Full menu: tapping a cocktail that has a photo opens it in a lightbox over the page (the menu lives in an iframe,
+// so the lightbox belongs to the parent page). Arrows, swipe and the keyboard move between photographed cocktails.
+(()=>{const box=document.getElementById('cocktail-lightbox'),frame=document.getElementById('drinks-menu-frame');if(!box||!frame)return;
+const photos={'Honolulu':'honolulu','Montréal':'montreal','Kingston':'kingston','Rio de Janeiro':'rio','Sienne':'sienne','Jaipur':'jaipur','Beyrouth':'beyrouth','Nosy Be':'nosybe','Koh Samui':'kohsamui'};
+const img=box.querySelector('img'),title=box.querySelector('.cocktail-lightbox-title'),meta=box.querySelector('.cocktail-lightbox-meta'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let list=[],idx=0,opener=null;
+const show=i=>{idx=(i+list.length)%list.length;const c=list[idx];img.src='assets/cocktails/'+c.file+'.webp';img.alt=c.name+', cocktail signature du Calbar';title.textContent=c.name;meta.textContent=c.meta;const n=list[(idx+1)%list.length];if(n){const pre=new Image();pre.src='assets/cocktails/'+n.file+'.webp';}};
+const open=(i,el)=>{opener=el;show(i);box.hidden=false;document.documentElement.classList.add('lightbox-open');requestAnimationFrame(()=>box.classList.add('is-open'));box.querySelector('.cocktail-lightbox-close').focus({preventScroll:true});};
+const close=()=>{box.classList.remove('is-open');document.documentElement.classList.remove('lightbox-open');setTimeout(()=>{box.hidden=true;},reduce?0:160);if(opener)opener.focus({preventScroll:true});};
+box.addEventListener('click',e=>{if(e.target.closest('[data-close]'))close();else if(e.target.closest('.cocktail-lightbox-prev'))show(idx-1);else if(e.target.closest('.cocktail-lightbox-next'))show(idx+1);});
+document.addEventListener('keydown',e=>{if(box.hidden)return;if(e.key==='Escape')close();else if(e.key==='ArrowRight')show(idx+1);else if(e.key==='ArrowLeft')show(idx-1);
+ else if(e.key==='Tab'){const f=[...box.querySelectorAll('button')];const i=f.indexOf(document.activeElement);e.preventDefault();f[(i+(e.shiftKey?-1:1)+f.length)%f.length].focus();}});
+let sx=null;box.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
+box.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(dx)>50)show(idx+(dx<0?1:-1));},{passive:true});
+const enhance=()=>{const doc=frame.contentDocument;if(!doc||doc.documentElement.dataset.photos)return;doc.documentElement.dataset.photos='1';
+ const st=doc.createElement('style');st.textContent='.cocktail.has-photo{cursor:zoom-in;position:relative}.cocktail.has-photo:focus-visible{outline:2px solid #e9b264;outline-offset:6px}.photo-badge{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:4px 10px;border:1px solid rgba(233,178,100,.55);border-radius:999px;color:#e9b264;font:600 10px/1 Arial,Helvetica,sans-serif;letter-spacing:.12em;text-transform:uppercase}.photo-badge svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}@media(hover:hover) and (pointer:fine){.cocktail.has-photo:hover .photo-badge{background:#e9b264;color:#1a1d20}}';doc.head.append(st);
+ list=[];[...doc.querySelectorAll('.cocktail')].forEach(a=>{const h=a.querySelector('h2');const name=h&&h.textContent.trim();if(!photos[name])return;
+  const base=a.querySelector('.base'),lead=a.querySelector('.ingredients .lead'),price=a.querySelector('.price strong');
+  const item={name,file:photos[name],meta:[base&&base.textContent.trim(),lead&&lead.textContent.trim(),price&&price.textContent.trim()].filter(Boolean).join(' · ')};const i=list.push(item)-1;
+  a.classList.add('has-photo');a.tabIndex=0;a.setAttribute('role','button');a.setAttribute('aria-label','Voir la photo du '+name);
+  const badge=doc.createElement('span');badge.className='photo-badge';badge.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Photo';a.append(badge);
+  a.addEventListener('click',()=>open(i,a));a.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open(i,a);}});});
+window.dispatchEvent(new Event('resize'));};
+frame.addEventListener('load',enhance);if(frame.contentDocument&&frame.contentDocument.readyState==='complete')enhance();})();

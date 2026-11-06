@@ -651,3 +651,33 @@ h1,h2,.techniques-heading h2,.menus-heading h2,.hero .hero-copy h1,.agency-page 
 .form-grid label>span{font-size:13px}
 .form-grid label,.form-grid .form-when>label{justify-content:flex-start}
 .form-grid input:not([type=hidden]),.form-grid select{height:52px;min-height:52px;box-sizing:border-box}
+
+/* v71 — cocktail photo lightbox (opened from the full drinks menu) */
+.cocktail-lightbox{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px}
+.cocktail-lightbox[hidden]{display:none}
+.cocktail-lightbox-backdrop{position:absolute;inset:0;background:rgba(8,8,7,.86);opacity:0;transition:opacity 200ms ease}
+.cocktail-lightbox-panel{position:relative;margin:0;width:min(1000px,100%);opacity:0;transform:scale(.97);transition:opacity 200ms cubic-bezier(.23,1,.32,1),transform 200ms cubic-bezier(.23,1,.32,1)}
+.cocktail-lightbox.is-open .cocktail-lightbox-backdrop,.cocktail-lightbox.is-open .cocktail-lightbox-panel{opacity:1;transform:none}
+.cocktail-lightbox-media{aspect-ratio:7/5;background:#050504;border:1px solid var(--warm,#e9b264)}
+.cocktail-lightbox-media img{display:block;width:100%;height:100%;object-fit:cover}
+.cocktail-lightbox figcaption{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;padding:16px 4px 0}
+.cocktail-lightbox-title{font-family:'Bodoni Moda',Georgia,serif;font-size:clamp(26px,3vw,36px);color:var(--ink)}
+.cocktail-lightbox-meta{color:#c3bfb6;font-size:14px}
+.cocktail-lightbox-close{position:absolute;top:-56px;right:0;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid var(--warm,#e9b264);border-radius:50%;background:#2b3034;color:var(--ink);cursor:pointer}
+.cocktail-lightbox-nav{position:absolute;top:calc((100% - 56px)/2);transform:translateY(-50%);width:48px;height:48px;display:flex;align-items:center;justify-content:center;border:1px solid var(--warm,#e9b264);border-radius:50%;background:rgba(43,48,52,.9);color:var(--ink);cursor:pointer}
+.cocktail-lightbox-prev{left:-68px}
+.cocktail-lightbox-next{right:-68px}
+.cocktail-lightbox svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cocktail-lightbox button:active{transform:scale(.95)}
+.cocktail-lightbox-nav:active{transform:translateY(-50%) scale(.95)}
+@media(hover:hover) and (pointer:fine){.cocktail-lightbox button:hover{background:var(--warm,#e9b264);color:#1a1d20}}
+.lightbox-open,.lightbox-open body{overflow:hidden}
+@media(max-width:1180px){.cocktail-lightbox-prev{left:10px}.cocktail-lightbox-next{right:10px}}
+@media(max-width:800px){
+.cocktail-lightbox{padding:16px}
+.cocktail-lightbox-close{top:-54px}
+.cocktail-lightbox-nav{width:42px;height:42px}
+}
+@media(prefers-reduced-motion:reduce){.cocktail-lightbox-panel{transform:none}}
+.cocktail-lightbox-backdrop{z-index:0}.cocktail-lightbox-panel{z-index:1}
+.cocktail-lightbox button.cocktail-lightbox-nav:active{transform:translateY(-50%) scale(.95)}
