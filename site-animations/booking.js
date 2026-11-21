@@ -23,7 +23,12 @@ function say(text,kind){status.classList.remove('is-shown');status.dataset.kind=
 
 const today=new Date();date.min=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
 function update(){const workshop=type.value==='atelier';document.getElementById('slot-label').hidden=!workshop;slot.required=workshop;slot.disabled=!workshop;const timeLabel=document.getElementById('time-label');timeLabel.hidden=workshop;time.disabled=workshop;time.required=type.value==='table';timeLabel.firstChild.textContent=type.value==='evenement'?'Heure (facultatif)':'Heure d’arrivée';guests.min=workshop?'4':'1';guests.max=workshop?'10':'200';date.setCustomValidity('');}
-function validDay(){const day=new Date(date.value+'T12:00:00').getDay();date.setCustomValidity(date.value&&[0,1].includes(day)?'Choisissez une date du mardi au samedi.':'');}
+// Annual closures: [first closed day, last closed day, message]. Keep in sync with api/request.php.
+const CLOSURES=[['2026-12-20','2027-01-04','Le Calbar est fermé du 20 décembre au 4 janvier. Choisissez une date à partir du mardi 5 janvier.']];
+const closure=v=>CLOSURES.find(c=>v>=c[0]&&v<=c[1]);
+function validDay(){const day=new Date(date.value+'T12:00:00').getDay(),c=date.value&&closure(date.value);date.setCustomValidity(c?c[2]:date.value&&[0,1].includes(day)?'Choisissez une date du mardi au samedi.':'');}
+date.addEventListener('change',()=>{validDay();if(date.validationMessage)date.reportValidity();});
+{const iso=date.min,note=CLOSURES.find(c=>iso<=c[1]),hours=document.querySelector('.booking-info dd');if(note&&hours){const fmt=v=>new Date(v+'T12:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'long'});const s=document.createElement('span');s.className='closure-note';s.textContent='Fermeture du '+fmt(note[0])+' au '+fmt(note[1])+' inclus';hours.append(document.createElement('br'),s);}}
 type.addEventListener('change',update);date.addEventListener('input',validDay);update();
 document.querySelectorAll('[data-request]').forEach(a=>a.addEventListener('click',()=>{type.value=a.dataset.request;update();document.getElementById('contact-title').textContent=type.value==='atelier'?'Votre atelier cocktails.':'Votre réservation au Calbar.';}));
 async function token(){const r=await fetch('api/request.php',{credentials:'same-origin',cache:'no-store'});if(!r.ok)throw new Error();const d=await r.json();if(!d.csrf)throw new Error();f.elements.csrf.value=d.csrf;}

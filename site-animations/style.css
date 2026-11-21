@@ -710,3 +710,4 @@ h1,h2,.techniques-heading h2,.menus-heading h2,.hero .hero-copy h1,.agency-page 
 @media(prefers-reduced-motion:reduce){.cocktail-lightbox-panel{transform:none}}
 .cocktail-lightbox-backdrop{z-index:0}.cocktail-lightbox-panel{z-index:1}
 .cocktail-lightbox button.cocktail-lightbox-nav:active{transform:translateY(-50%) scale(.95)}
+.closure-note{color:var(--warm,#e9b264)}

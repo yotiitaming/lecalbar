@@ -27,6 +27,8 @@ $guests=filter_var($_POST['guests'] ?? null,FILTER_VALIDATE_INT);
 if ($guests===false || $guests<($type==='atelier'?4:1) || $guests>($type==='atelier'?10:200)) respond(422,['message'=>'Vérifiez le nombre de personnes (4 à 10 pour un atelier).']);
 $tz=new DateTimeZone('Europe/Paris');$d=DateTimeImmutable::createFromFormat('!Y-m-d',$date,$tz);
 if (!$d || $d->format('Y-m-d')!==$date || $d<new DateTimeImmutable('today',$tz) || in_array((int)$d->format('N'),[1,7],true)) respond(422,['message'=>'Choisissez une date à venir, du mardi au samedi.']);
+// Annual closures (first and last closed day, inclusive). Keep in sync with booking.js.
+foreach ([['2026-12-20','2027-01-04']] as [$from,$to]) { if ($date>=$from && $date<=$to) respond(422,['message'=>'Le Calbar est fermé du 20 décembre au 4 janvier. Choisissez une date à partir du mardi 5 janvier.']); }
 if ($type==='atelier' && !in_array($slot,['15-16','16-17','17-18'],true)) respond(422,['message'=>'Choisissez un créneau valide.']);
 $times=['18:00','18:30','19:00','19:30','20:00']; // last bookable arrival: 20h
 if ($type==='table' && !in_array($time,$times,true)) respond(422,['message'=>'Choisissez une heure d’arrivée.']);
